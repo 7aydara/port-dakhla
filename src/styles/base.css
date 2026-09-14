@@ -1,0 +1,200 @@
+/* ==========================================================================
+   BASE
+   ========================================================================== */
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+html, body, #racine { height: 100%; }
+
+body {
+  margin: 0;
+  background: var(--fond);
+  color: var(--ecume);
+  font-family: var(--texte);
+  font-size: clamp(0.95rem, 0.55rem + 0.62vw, 1.22rem);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 900ms ease;
+  overflow-wrap: break-word;
+}
+
+h1, h2, h3, p, ul, ol, figure, blockquote { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+
+/* --------------------------------------------------------------------------
+   PRINCIPE 1 : un chiffre n'est jamais du texte.
+   Toute donnee chiffree sort du flux -- Iosevka, chiffres tabulaires,
+   unite desaccentuee, millesime attache.
+   -------------------------------------------------------------------------- */
+.cote {
+  font-family: var(--cote);
+  font-variant-numeric: tabular-nums slashed-zero;
+  font-feature-settings: 'tnum' 1, 'zero' 1;
+  letter-spacing: -0.01em;
+  color: var(--sable);
+  font-weight: 500;
+}
+.cote--geant {
+  display: block;
+  font-size: clamp(2.2rem, 1rem + 4.2vw, 4.6rem);
+  font-weight: 700;
+  line-height: 0.92;
+}
+.cote--grand {
+  display: block;
+  font-size: clamp(1.5rem, 0.8rem + 2.2vw, 2.6rem);
+  font-weight: 700;
+  line-height: 1;
+}
+.cote__unite {
+  font-size: 0.5em;
+  font-weight: 400;
+  color: var(--ecume-62);
+  letter-spacing: 0.04em;
+  margin-left: 0.28em;
+}
+.cote__millesime {
+  display: block;
+  font-family: var(--cote);
+  font-size: 0.7rem;
+  color: var(--ecume-40);
+  letter-spacing: 0.06em;
+  margin-top: 0.5em;
+}
+
+/* Regle volee aux cartes marines : le romain designe ce qui est a sec,
+   l'italique ce qui est en mer ou flottant. Appliquee aux legendes du schema. */
+.en-mer { font-style: italic; }
+
+/* --------------------------------------------------------------------------
+   LE CARTOUCHE -- pas une carte arrondie a ombre douce.
+   Angles droits, un filet d'1 px, un liseré de sonde a gauche. Rien d'autre.
+   -------------------------------------------------------------------------- */
+.cartouche {
+  position: relative;
+  border: 1px solid var(--ecume-14);
+  border-left: 2px solid var(--isobathe);
+  background: rgb(7 32 43 / 0.42);
+  padding: clamp(0.8rem, 1.6vw, 1.3rem) clamp(1rem, 1.9vw, 1.5rem);
+}
+.cartouche--acquis { border-left-color: var(--sable); }
+.cartouche--encours {
+  border-left-color: var(--magenta-carte);
+  background: rgb(233 84 140 / 0.07);
+}
+.cartouche__titre {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-family: var(--cote);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  color: var(--ecume);
+  text-transform: uppercase;
+}
+
+/* Filet de section : une regle graduee, pas une bordure decorative. */
+.filet {
+  height: 1px;
+  background: var(--ecume-14);
+  border: 0;
+}
+
+/* --------------------------------------------------------------------------
+   PRINCIPE 2 : une seule chose bouge a la fois.
+   Une etape = un changement visible. Tout le reste reste stable pour que le
+   presentateur puisse parler par-dessus sans etre double par l'ecran.
+   -------------------------------------------------------------------------- */
+[data-etat] {
+  transition:
+    opacity var(--t-etape) var(--e-etape),
+    transform var(--t-etape) var(--e-etape),
+    stroke-dashoffset var(--t-etape) var(--e-etape),
+    color var(--t-etape) var(--e-etape),
+    border-color var(--t-etape) var(--e-etape),
+    background-color var(--t-etape) var(--e-etape);
+}
+[data-etat='futur'] {
+  opacity: 0;
+  transform: translateY(0.7rem);
+  pointer-events: none;
+}
+[data-etat='encours'],
+[data-etat='acquis'] {
+  opacity: 1;
+  transform: none;
+}
+
+/* Le rattrapage instantane (appui pendant une animation) n'est PAS traite ici :
+   une transition deja lancee ignore les changements de transition-duration.
+   Il est fait en JS, par pose de `transition: none` puis reflow.
+   Voir src/hooks/useRattrapage.ts. */
+
+/* --------------------------------------------------------------------------
+   FOCUS -- visible partout, sans exception (critere d'acceptation 8).
+   -------------------------------------------------------------------------- */
+:focus { outline: none; }
+:focus-visible {
+  outline: 3px solid var(--magenta-carte);
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+
+a {
+  color: var(--ecume);
+  text-decoration-color: var(--isobathe);
+  text-underline-offset: 0.22em;
+  text-decoration-thickness: 1px;
+}
+a:hover { text-decoration-color: var(--sable); }
+
+/* Lien d'evitement : premiere tabulation de la page. */
+.evitement {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 200;
+  background: var(--sable);
+  color: var(--abysse);
+  padding: 0.7rem 1.1rem;
+  font-weight: 700;
+}
+.evitement:focus-visible { left: 0.5rem; top: 0.5rem; }
+
+.lecteur-seul {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+/* --------------------------------------------------------------------------
+   CRITERE 6 : prefers-reduced-motion donne une experience COMPLETE, sans
+   animation. Les etats finaux sont atteints immediatement ; la sequence des
+   etapes n'est pas cassee, elle est seulement instantanee.
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+  [data-etat='futur'] { transform: none; }
+}

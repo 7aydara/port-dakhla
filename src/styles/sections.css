@@ -1,0 +1,835 @@
+/* ==========================================================================
+   STYLES DE SECTION
+   ========================================================================== */
+
+/* En mode presentation, le scroll du document est neutralise. */
+html.presentation, html.presentation body { overflow: hidden; height: 100%; }
+/* Le scroll est bloque tant que la sequence d'intro n'est pas prechargee. */
+body.chargement-en-cours { overflow: hidden; }
+
+.cote__nuance {
+  font-size: 0.44em;
+  font-weight: 400;
+  color: var(--ecume-40);
+  letter-spacing: 0.05em;
+  margin-right: 0.3em;
+}
+.mention {
+  font-family: var(--cote);
+  font-size: 0.7rem;
+  color: var(--ecume-40);
+  max-width: 70ch;
+}
+.contenu--large { max-width: 1700px; }
+
+.bouton-presentation {
+  position: fixed;
+  right: clamp(0.8rem, 2vw, 1.6rem);
+  bottom: clamp(0.8rem, 2vw, 1.6rem);
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 0.95rem;
+  border: 1px solid var(--ecume-14);
+  background: rgb(4 20 27 / 0.9);
+  backdrop-filter: blur(8px);
+  font-family: var(--cote);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.bouton-presentation:hover { border-color: var(--sable); color: var(--sable); }
+
+/* ==========================================================================
+   00 -- INTRO SCRUBEE
+   ========================================================================== */
+
+.section--nu { padding: 0; min-height: 0; display: block; }
+.intro--piste { height: 320vh; position: relative; }
+.appli[data-mode='presentation'] .intro { height: 100vh; }
+
+.intro__collant {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  display: grid;
+  align-items: end;
+}
+.appli[data-mode='presentation'] .intro__collant { position: relative; }
+
+.scrub { position: absolute; inset: 0; }
+.scrub__canvas, .scrub__poster {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+/* Voile de lisibilite : un degrade UTILE, pas decoratif -- sans lui, le titre
+   blanc passe sur une dune claire et devient illisible au videoprojecteur. */
+.scrub__voile {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to top, rgb(4 20 27 / 0.92) 0%, rgb(4 20 27 / 0.55) 38%, rgb(4 20 27 / 0.1) 70%),
+    linear-gradient(to right, rgb(4 20 27 / 0.6) 0%, rgb(4 20 27 / 0) 55%);
+}
+
+.chargement {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--cote);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ecume-62);
+}
+.chargement__jauge { width: 11rem; height: 2px; background: var(--ecume-14); overflow: hidden; }
+.chargement__remplissage {
+  display: block;
+  height: 100%;
+  background: var(--sable);
+  transform-origin: left;
+  transition: transform 200ms linear;
+}
+
+.intro__texte {
+  position: relative;
+  z-index: 2;
+  padding: var(--marge);
+  padding-bottom: clamp(3rem, 9vh, 5rem);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.6rem, 1.6vh, 1.1rem);
+  max-width: 60rem;
+}
+.intro__sur-titre {
+  font-family: var(--cote);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: var(--sable);
+  text-transform: uppercase;
+}
+.intro__titre {
+  font-size: clamp(2.3rem, 1rem + 5.6vw, 5.8rem);
+  font-weight: 700;
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+}
+.intro__lieu { max-width: 46ch; color: var(--ecume-62); }
+.intro__noms { display: flex; flex-wrap: wrap; gap: 0.4rem 1.4rem; }
+.intro__noms li {
+  font-family: var(--cote);
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--presentateur);
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+.intro__noms li::before {
+  content: '';
+  width: 0.55rem; height: 0.55rem;
+  background: var(--presentateur);
+}
+.intro__question {
+  font-size: clamp(1.05rem, 0.8rem + 0.8vw, 1.4rem);
+  max-width: 40ch;
+  border-left: 2px solid var(--magenta-carte);
+  padding-left: 0.9rem;
+}
+.intro__invite { font-family: var(--cote); font-size: 0.78rem; color: var(--ecume-40); }
+.intro__mention {
+  position: absolute;
+  right: var(--marge);
+  bottom: 0.6rem;
+  z-index: 2;
+  font-family: var(--cote);
+  font-size: 0.62rem;
+  color: var(--ecume-40);
+  max-width: 32ch;
+  text-align: right;
+}
+
+/* ==========================================================================
+   01 -- LE PROJET
+   ========================================================================== */
+
+.composantes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 1px;
+  background: var(--ecume-14);
+  border: 1px solid var(--ecume-14);
+}
+.composante {
+  display: grid;
+  grid-template-columns: 2.4rem minmax(0, 1fr);
+  gap: 0.8rem;
+  padding: clamp(0.9rem, 1.8vw, 1.4rem);
+  background: var(--fond);
+}
+.composante__rang {
+  font-family: var(--cote);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--isobathe);
+}
+.composante__corps { display: flex; flex-direction: column; gap: 0.45rem; min-width: 0; }
+.composante__nom { font-size: 1.02rem; font-weight: 700; line-height: 1.2; }
+.composante__profondeur { display: flex; align-items: baseline; gap: 0.55rem; flex-wrap: wrap; }
+.composante__glose { font-size: 0.76rem; color: var(--ecume-40); }
+.composante__texte { font-size: 0.88rem; color: var(--ecume-62); }
+.composante__quai {
+  font-family: var(--cote);
+  font-size: 0.76rem;
+  color: var(--ecume-40);
+  border-top: 1px solid var(--ecume-08);
+  padding-top: 0.45rem;
+}
+
+.bandeau-chiffres {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: clamp(1rem, 2.5vw, 2.4rem);
+  align-items: start;
+  border-top: 1px solid var(--ecume-14);
+  padding-top: clamp(1rem, 2.4vh, 1.6rem);
+}
+.bandeau-chiffres__glose {
+  display: block;
+  font-size: 0.82rem;
+  color: var(--ecume-62);
+  max-width: 22ch;
+  margin-top: 0.35rem;
+}
+.bandeau-chiffres__texte {
+  font-size: 0.86rem;
+  color: var(--ecume-62);
+  max-width: 46ch;
+  grid-column: span 2;
+}
+@media (max-width: 720px) { .bandeau-chiffres__texte { grid-column: auto; } }
+
+/* ==========================================================================
+   02 -- LOCALISATION
+   ========================================================================== */
+
+.localisation {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: clamp(1rem, 2.5vw, 2.2rem);
+  align-items: start;
+}
+@media (max-width: 1000px) { .localisation { grid-template-columns: minmax(0, 1fr); } }
+
+.localisation__colonne { display: flex; flex-direction: column; gap: 0.9rem; }
+.localisation__reserve {
+  font-family: var(--cote);
+  font-size: 0.68rem;
+  color: var(--ecume-40);
+  margin-top: 0.6rem;
+  border-top: 1px solid var(--ecume-08);
+  padding-top: 0.5rem;
+}
+
+.carte { margin: 0; display: flex; flex-direction: column; gap: 0.6rem; }
+.carte__hublot {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--ecume-14);
+  aspect-ratio: 4 / 3;
+  background: var(--abysse);
+}
+.carte__mobile {
+  position: absolute;
+  inset: 0;
+  transition: transform 1.6s var(--e-etape);
+}
+.carte__image { width: 100%; height: 100%; object-fit: cover; display: block; }
+.carte__marqueur { position: absolute; inset: 0; width: 100%; height: 100%; }
+.carte__point { fill: var(--magenta-carte); }
+.carte__halo { fill: none; stroke: var(--magenta-carte); stroke-width: 0.5; opacity: 0.7; }
+.carte__legende { font-size: 0.82rem; color: var(--ecume-62); }
+.carte__todo {
+  display: block;
+  font-family: var(--cote);
+  font-size: 0.68rem;
+  color: var(--sable);
+  margin-top: 0.35rem;
+}
+.carte__note { font-size: 0.84rem; color: var(--ecume-62); }
+
+/* Emplacement reserve pour un media non encore fourni. */
+.emplacement {
+  position: relative;
+  max-height: 46vh;
+  display: grid;
+  place-items: center;
+  border: 2px dashed var(--sable-20);
+  background: rgb(7 32 43 / 0.6);
+  overflow: hidden;
+}
+.emplacement__mire {
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(45deg, var(--sable-20) 0 2px, transparent 2px 14px);
+  opacity: 0.5;
+}
+.emplacement__texte {
+  position: relative;
+  text-align: center;
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  align-items: center;
+}
+.emplacement__etiquette {
+  font-family: var(--cote);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--sable);
+}
+.emplacement__chemin {
+  font-family: var(--cote);
+  font-size: 0.86rem;
+  color: var(--ecume);
+  background: var(--abysse);
+  border: 1px solid var(--ecume-14);
+  padding: 0.3rem 0.6rem;
+}
+.emplacement__attendu { font-size: 0.8rem; color: var(--ecume-62); max-width: 42ch; }
+
+/* Schema de principe de la cote. */
+.schema-cote { margin: 0; display: flex; flex-direction: column; gap: 0.5rem; }
+.schema-cote__svg {
+  width: 100%;
+  height: auto;
+  max-height: 42vh;
+  border: 1px solid var(--ecume-14);
+  background: var(--abysse);
+}
+.schema-cote__terre { fill: color-mix(in oklab, var(--sable) 20%, var(--abysse)); }
+.schema-cote__trait { fill: none; stroke: var(--sable); stroke-width: 2; }
+.schema-cote__mer {
+  font-family: var(--cote); font-size: 14px; font-style: italic;
+  fill: var(--isobathe); letter-spacing: 0.14em;
+}
+.schema-cote__nom { font-family: var(--cote); font-size: 14px; fill: var(--ecume-62); }
+.schema-cote__nom--terre { fill: var(--ecume); font-weight: 700; }
+.schema-cote__nom--site { fill: var(--magenta-carte); font-weight: 700; }
+.schema-cote__ville { fill: var(--ecume); }
+.schema-cote__site { fill: var(--magenta-carte); }
+.schema-cote__site-halo { fill: none; stroke: var(--magenta-carte); stroke-width: 1.5; opacity: 0.6; }
+.schema-cote__cotation { stroke: var(--ecume-40); stroke-width: 1.2; }
+.schema-cote__distance {
+  font-family: var(--cote); font-size: 15px; font-weight: 700; fill: var(--sable);
+}
+.schema-cote__distance--petit { font-size: 12px; font-weight: 400; fill: var(--ecume-40); }
+.schema-cote__nord { fill: var(--ecume-40); }
+.schema-cote__nord-lettre { font-family: var(--cote); font-size: 15px; font-weight: 700; fill: var(--ecume-62); }
+
+.fiche { display: flex; flex-direction: column; gap: 1px; background: var(--ecume-14); border: 1px solid var(--ecume-14); }
+.fiche__ligne {
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr);
+  gap: 0.8rem;
+  padding: 0.5rem 0.8rem;
+  background: var(--fond);
+}
+.fiche__ligne dt {
+  font-family: var(--cote); font-size: 0.7rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--ecume-40);
+  align-self: center;
+}
+.fiche__ligne dd { margin: 0; font-size: 0.88rem; }
+
+/* ==========================================================================
+   03 -- CONSTRUCTION (complement de schema.css)
+   ========================================================================== */
+
+.legende__details { display: flex; flex-direction: column; gap: 0.25rem; margin-top: 0.4rem; }
+.legende__details li {
+  display: grid;
+  grid-template-columns: 0.8rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.78rem;
+  color: var(--ecume-62);
+}
+.legende__puce { width: 0.8rem; height: 0.28rem; background: var(--teinte); }
+.legende__details .cote { white-space: nowrap; }
+.legende__details .cote__unite { margin-left: 0.2em; }
+.legendes__pied {
+  font-size: 0.8rem;
+  color: var(--ecume-62);
+  border-top: 1px solid var(--ecume-14);
+  padding-top: 0.6rem;
+}
+
+/* ==========================================================================
+   04 -- CHRONOLOGIE
+   L'axe est proportionnel au temps ; le detail vit SOUS la frise, jamais en
+   bulles superposees -- sept des quinze dates tombent entre 2024 et 2026 et
+   se recouvriraient.
+   ========================================================================== */
+
+.corps--frise { gap: clamp(1rem, 3vh, 2rem); }
+
+.frise { position: relative; padding-bottom: 4.6rem; }
+.frise__graduation { position: relative; height: 1.1rem; }
+.frise__annee {
+  position: absolute;
+  transform: translateX(-50%);
+  font-family: var(--cote);
+  font-size: 0.72rem;
+  color: var(--ecume-40);
+  font-variant-numeric: tabular-nums;
+}
+.frise__rail {
+  position: relative;
+  height: 3px;
+  background: var(--ecume-14);
+  /* De la place au-dessus du rail pour le curseur de jauge, qui ne doit
+     jamais recouvrir la graduation des annees. */
+  margin-top: 3.9rem;
+}
+.frise__avancement {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  background: linear-gradient(to right, var(--isobathe), var(--sable));
+  transition: width 900ms var(--e-etape);
+}
+.frise__point {
+  position: absolute;
+  top: 50%;
+  width: 7px; height: 7px;
+  margin: -3.5px 0 0 -3.5px;
+  background: var(--sable);
+  border-radius: 50%;
+}
+/* Un seul pourcentage affiche : le dernier atteint. Il grimpe le long de
+   la frise au fil des paliers -- c'est la jauge d'avancement. */
+.frise__curseur {
+  position: absolute;
+  bottom: 0.55rem;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  white-space: nowrap;
+  transition: left 900ms var(--e-etape);
+}
+.frise__curseur .cote { font-size: 1.5rem; font-weight: 700; }
+.frise__curseur-date { font-family: var(--cote); font-size: 0.64rem; color: var(--ecume-40); }
+
+.frise__jalons { position: relative; height: 0; }
+.frise__jalon { position: absolute; top: 0; }
+.frise__bouton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: translateX(-50%);
+  padding: 0 0.25rem 0.25rem;
+  transition: opacity 400ms ease;
+}
+.frise__bouton:disabled { cursor: default; }
+.frise__tige {
+  width: 1px;
+  height: 1.1rem;
+  background: var(--ecume-40);
+  transition: background-color 300ms ease, height 300ms ease;
+}
+.frise__jalon[data-cle='true'] .frise__tige { height: 2rem; width: 2px; background: var(--sable); }
+.frise__jalon[data-etat='encours'] .frise__tige { background: var(--magenta-carte); }
+.frise__jalon[data-etat='futur'] .frise__bouton { opacity: 0.22; }
+.frise__date {
+  font-family: var(--cote);
+  font-size: 0.64rem;
+  color: var(--ecume-40);
+  writing-mode: vertical-rl;
+  white-space: nowrap;
+  margin-top: 0.25rem;
+}
+/* Seules les quatre dates cles sont nommees en permanence : les onze autres
+   n'affichent leur libelle qu'au survol ou au focus, sinon la frise devient
+   une foret de texte vertical. */
+.frise__jalon:not([data-cle='true']) .frise__date {
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+.frise__jalon:not([data-cle='true']) .frise__bouton:hover .frise__date,
+.frise__jalon:not([data-cle='true']) .frise__bouton:focus-visible .frise__date {
+  opacity: 1;
+}
+.frise__jalon[data-cle='true'] .frise__date { color: var(--ecume); font-weight: 700; }
+
+.frise-detail {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 0.7rem;
+  align-content: start;
+  min-height: 8.5rem;
+}
+.jalon {
+  border: 1px solid var(--ecume-14);
+  border-top: 2px solid var(--isobathe);
+  padding: 0.7rem 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.jalon[data-cle='true'] { border-top-color: var(--sable); }
+.jalon__date {
+  font-family: var(--cote);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sable);
+}
+.jalon__evenement { font-size: 0.88rem; }
+.jalon__reserve { font-family: var(--cote); font-size: 0.68rem; color: var(--ecume-40); }
+.frise__note { font-size: 0.82rem; color: var(--ecume-62); max-width: 62ch; }
+
+@media (max-width: 820px) {
+  .frise { min-width: 44rem; }
+  .corps--frise { overflow-x: auto; }
+}
+
+/* ==========================================================================
+   05 -- OBJECTIFS ET DEFIS
+   ========================================================================== */
+
+.enjeux {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(1.2rem, 3vw, 3rem);
+  align-items: start;
+}
+@media (max-width: 1000px) { .enjeux { grid-template-columns: minmax(0, 1fr); } }
+
+.enjeux__volet { display: flex; flex-direction: column; gap: 0.8rem; }
+.enjeux__titre {
+  font-family: var(--cote);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--isobathe);
+  border-bottom: 1px solid var(--ecume-14);
+  padding-bottom: 0.4rem;
+}
+
+.objectifs { display: flex; flex-direction: column; }
+.objectif {
+  display: grid;
+  grid-template-columns: 2.3rem minmax(0, 1fr);
+  gap: 0.7rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--ecume-08);
+}
+.objectif__rang { font-family: var(--cote); font-size: 0.8rem; font-weight: 700; color: var(--sable); }
+.objectif__titre { font-size: 0.95rem; font-weight: 700; line-height: 1.25; }
+.objectif__detail { font-size: 0.82rem; color: var(--ecume-62); margin-top: 0.15rem; }
+
+.piliers { display: flex; flex-direction: column; gap: 0.7rem; }
+.pilier {
+  border: 1px solid var(--ecume-14);
+  border-left: 3px solid var(--teinte-pilier, var(--isobathe));
+  padding: 0.7rem 0.9rem;
+}
+.pilier[data-pilier='social'] { --teinte-pilier: var(--zayd); }
+.pilier[data-pilier='economique'] { --teinte-pilier: var(--sable); }
+.pilier[data-pilier='environnemental'] { --teinte-pilier: var(--magenta-carte); }
+
+.pilier__entete {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 0.6rem;
+  border-bottom: 1px solid var(--ecume-08);
+  padding-bottom: 0.4rem;
+  margin-bottom: 0.5rem;
+}
+.pilier__nom {
+  font-family: var(--cote);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--teinte-pilier);
+}
+.pilier__glose { grid-column: 1; font-size: 0.76rem; color: var(--ecume-40); }
+/* Le nombre de defis par pilier, traite comme une cote : c'est lui qui rend
+   visible le desequilibre en faveur de l'environnement. */
+.pilier__compte {
+  grid-row: 1 / 3;
+  grid-column: 2;
+  align-self: center;
+  font-family: var(--cote);
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: var(--teinte-pilier);
+  opacity: 0.55;
+  font-variant-numeric: tabular-nums;
+}
+.pilier__liste { display: flex; flex-direction: column; gap: 0.55rem; }
+.defi__titre { font-size: 0.92rem; font-weight: 700; }
+.defi__detail { font-size: 0.82rem; color: var(--ecume-62); }
+.defi__aussi {
+  font-family: var(--cote);
+  font-size: 0.66rem;
+  color: var(--ecume-40);
+  margin-top: 0.15rem;
+}
+.enjeux__lecture {
+  border-left: 2px solid var(--magenta-carte);
+  padding-left: 0.8rem;
+  font-size: 0.92rem;
+}
+
+/* ==========================================================================
+   06 -- COMPARATEUR AVANT / AUJOURD'HUI
+   ========================================================================== */
+
+.comparateur { display: flex; flex-direction: column; gap: 0.6rem; }
+.comparateur__cadre {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--ecume-14);
+  aspect-ratio: 16 / 9;
+  max-height: 58vh;
+  touch-action: none;
+  cursor: ew-resize;
+  background: var(--abysse);
+}
+.comparateur__image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  user-select: none;
+}
+.comparateur__volet { position: absolute; inset: 0; }
+.comparateur__etiquette {
+  position: absolute;
+  bottom: 0.7rem;
+  font-family: var(--cote);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: rgb(4 20 27 / 0.88);
+  border: 1px solid var(--ecume-14);
+  padding: 0.3rem 0.6rem;
+  pointer-events: none;
+}
+.comparateur__etiquette--gauche { left: 0.7rem; color: var(--ecume-62); }
+.comparateur__etiquette--droite { right: 0.7rem; color: var(--sable); }
+
+.comparateur__poignee {
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 2.6rem;
+  transform: translateX(-50%);
+  display: grid;
+  place-items: center;
+  cursor: ew-resize;
+}
+.comparateur__trait {
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 2px;
+  background: var(--ecume);
+  box-shadow: 0 0 0 1px rgb(4 20 27 / 0.55);
+}
+.comparateur__prise {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 2.6rem; height: 2.6rem;
+  background: var(--ecume);
+  color: var(--abysse);
+  border-radius: 50%;
+}
+.comparateur__poignee:focus-visible { outline: 3px solid var(--magenta-carte); outline-offset: 2px; }
+.comparateur__mode-emploi { font-size: 0.8rem; color: var(--ecume-62); }
+
+.avant-apres__lecture {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+  gap: 0.8rem;
+}
+
+/* ==========================================================================
+   07 -- CONCLUSION
+   ========================================================================== */
+
+.problematique {
+  font-size: clamp(1.2rem, 0.9rem + 1.3vw, 2rem);
+  font-weight: 700;
+  line-height: 1.25;
+  max-width: 26ch;
+  border-left: 3px solid var(--magenta-carte);
+  padding-left: clamp(0.8rem, 1.6vw, 1.4rem);
+}
+
+.balance {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+  gap: clamp(1rem, 2.6vw, 2.4rem);
+  align-items: start;
+}
+.balance__plateau { display: flex; flex-direction: column; gap: 0.8rem; }
+.balance__titre {
+  font-family: var(--cote);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--ecume-14);
+  padding-bottom: 0.4rem;
+}
+.balance__plateau[data-sens='pour'] .balance__titre { color: var(--sable); }
+.balance__plateau[data-sens='limite'] .balance__titre { color: var(--magenta-carte); }
+
+.argument {
+  border-left: 2px solid var(--ecume-14);
+  padding-left: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.balance__plateau[data-sens='pour'] .argument { border-left-color: var(--sable); }
+.balance__plateau[data-sens='limite'] .argument { border-left-color: var(--magenta-carte); }
+.argument__par {
+  font-family: var(--cote);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--presentateur);
+}
+.argument__titre { font-size: 1rem; font-weight: 700; line-height: 1.25; }
+.argument__texte { font-size: 0.88rem; color: var(--ecume-62); }
+
+/* ==========================================================================
+   08 -- SOURCES
+   ========================================================================== */
+
+.sources {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: clamp(1rem, 2.6vw, 2.4rem);
+  align-items: start;
+}
+@media (max-width: 1000px) { .sources { grid-template-columns: minmax(0, 1fr); } }
+
+.sources__liste { display: flex; flex-direction: column; }
+.source { padding: 0.6rem 0; border-bottom: 1px solid var(--ecume-08); }
+.source__organe {
+  font-family: var(--cote);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sable);
+}
+.source__date { color: var(--ecume-40); font-weight: 400; }
+.source__lien { display: inline-block; margin-top: 0.15rem; font-size: 0.92rem; }
+.source__url {
+  font-family: var(--cote);
+  font-size: 0.64rem;
+  color: var(--ecume-40);
+  word-break: break-all;
+  margin-top: 0.2rem;
+}
+
+.lexique { border: 1px solid var(--ecume-14); padding: 0.9rem 1rem; }
+.lexique__liste { display: flex; flex-direction: column; gap: 0.55rem; margin-top: 0.6rem; }
+.lexique__entree dt {
+  font-family: var(--cote);
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--ecume);
+}
+.lexique__entree dd { margin: 0; font-size: 0.8rem; color: var(--ecume-62); }
+
+.fin {
+  border-top: 1px solid var(--ecume-14);
+  padding-top: clamp(1rem, 2.4vh, 1.8rem);
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+.fin__merci {
+  font-size: clamp(1.2rem, 0.9rem + 1.2vw, 1.9rem);
+  font-weight: 700;
+}
+.fin__noms { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: 0.8rem; }
+.fin__noms li {
+  border-left: 2px solid var(--presentateur);
+  padding-left: 0.7rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+.fin__noms b {
+  font-family: var(--cote);
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--presentateur);
+}
+.fin__noms span { font-size: 0.8rem; color: var(--ecume-62); }
+
+/* Aide clavier -- complement. */
+.aide-clavier__ou { display: inline-block; width: 0.3rem; }
+.aide-clavier__sortie {
+  margin-top: 1.4rem;
+  font-family: var(--cote);
+  font-size: 0.8rem;
+  color: var(--sable);
+  letter-spacing: 0.08em;
+}
+
+/* Reserve documentaire affichee a la place d'une cote absente. */
+.legende__reserve {
+  font-family: var(--cote);
+  font-size: 0.62rem;
+  color: var(--sable);
+  text-align: right;
+  line-height: 1.3;
+}
+
+/* Trafic attendu (section 01). */
+.trafic { display: flex; flex-direction: column; gap: 0.4rem; }
+.trafic__titre {
+  font-family: var(--cote);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--isobathe);
+}
+.trafic__liste { display: flex; flex-direction: column; gap: 0.45rem; }
+.trafic__liste li { display: flex; flex-direction: column; }
+.trafic__unite { font-family: var(--cote); font-size: 0.72rem; color: var(--ecume-62); }
+.trafic__glose { font-size: 0.76rem; color: var(--ecume-40); }

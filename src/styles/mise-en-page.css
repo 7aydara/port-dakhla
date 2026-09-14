@@ -1,0 +1,315 @@
+/* ==========================================================================
+   MISE EN PAGE
+   Concept : le site est une carte marine qu'on lit de haut en bas. Une colonne
+   de releve a gauche qui ne bouge jamais, et a droite une planche par section.
+   Chaque section descend d'une isobathe.
+   ========================================================================== */
+
+.appli {
+  display: grid;
+  grid-template-columns: var(--colonne-releve) minmax(0, 1fr);
+  min-height: 100%;
+}
+.appli[data-mode='presentation'] { height: 100vh; overflow: hidden; }
+
+/* --------------------------------------------------------------------------
+   LA COLONNE DE RELEVE
+   Les sections y figurent comme des stations de sonde le long d'un profil.
+   -------------------------------------------------------------------------- */
+.releve {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding: clamp(1rem, 2.4vh, 2rem) 0 clamp(1rem, 2.4vh, 2rem) var(--marge);
+  border-right: 1px solid var(--ecume-14);
+  background: rgb(7 32 43 / 0.5);
+  backdrop-filter: blur(6px);
+  z-index: 40;
+}
+.releve__entete {
+  font-family: var(--cote);
+  font-size: 0.66rem;
+  letter-spacing: 0.16em;
+  color: var(--ecume-40);
+  text-transform: uppercase;
+}
+.releve__liste {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ecume-14) transparent;
+}
+.releve__station {
+  display: grid;
+  grid-template-columns: 2.1rem 0.55rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.5rem 0.3rem 0;
+  text-align: left;
+  width: 100%;
+  font-family: var(--cote);
+  font-size: 0.72rem;
+  line-height: 1.25;
+  color: var(--ecume-40);
+  transition: color 260ms ease;
+}
+.releve__station:hover { color: var(--ecume); }
+.releve__station[aria-current='true'] { color: var(--ecume); }
+.releve__numero { font-weight: 700; font-variant-numeric: tabular-nums; }
+/* La pastille de station : creuse si a venir, pleine si acquise,
+   magenta si c'est la station courante. */
+.releve__pastille {
+  width: 0.55rem; height: 0.55rem;
+  border: 1px solid var(--isobathe);
+  border-radius: 50%;
+  transition: background-color 260ms ease, border-color 260ms ease;
+}
+.releve__station[data-station='acquise'] .releve__pastille {
+  background: var(--sable);
+  border-color: var(--sable);
+}
+.releve__station[aria-current='true'] .releve__pastille {
+  background: var(--magenta-carte);
+  border-color: var(--magenta-carte);
+  box-shadow: 0 0 0 3px var(--magenta-18);
+}
+.releve__touche {
+  font-family: var(--cote);
+  font-size: 0.6rem;
+  color: var(--ecume-40);
+  border: 1px solid var(--ecume-08);
+  padding: 0 0.26rem;
+  line-height: 1.5;
+}
+.releve__station[aria-current='true'] .releve__touche {
+  color: var(--sable);
+  border-color: var(--sable-20);
+}
+.releve__libelle {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--texte);
+  font-size: 0.74rem;
+}
+.releve__pied {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding-right: var(--marge);
+}
+.releve__sonde {
+  font-family: var(--cote);
+  font-size: 0.7rem;
+  color: var(--ecume-40);
+  letter-spacing: 0.06em;
+}
+.releve__sonde b { color: var(--sable); font-weight: 700; }
+/* Jauge d'etapes de la section courante. */
+.jauge {
+  height: 3px;
+  background: var(--ecume-08);
+  overflow: hidden;
+}
+.jauge__remplissage {
+  height: 100%;
+  background: var(--magenta-carte);
+  transform-origin: left;
+  transition: transform 420ms var(--e-etape);
+}
+
+/* --------------------------------------------------------------------------
+   LA PLANCHE
+   -------------------------------------------------------------------------- */
+.planche { min-width: 0; }
+.appli[data-mode='presentation'] .planche { height: 100vh; overflow: hidden; }
+
+.section {
+  position: relative;
+  padding: clamp(2.5rem, 7vh, 6rem) var(--marge);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(1.2rem, 3vh, 2.4rem);
+  scroll-margin-top: 0;
+}
+/* En mode presentation, la section occupe exactement la hauteur de l'ecran.
+   L'entete ne defile JAMAIS : le presentateur doit garder son repere devant
+   la classe. Seul le corps peut defiler, et seulement s'il deborde. */
+.appli[data-mode='presentation'] .section {
+  height: 100vh;
+  min-height: 0;
+  overflow: hidden;
+  justify-content: flex-start;
+  padding-bottom: clamp(5rem, 13vh, 7rem); /* place pour le panneau de notes */
+}
+.appli[data-mode='presentation'] .contenu {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  gap: clamp(0.8rem, 2vh, 1.6rem);
+}
+.appli[data-mode='presentation'] .section__entete { flex: 0 0 auto; }
+.appli[data-mode='presentation'] .corps {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ecume-14) transparent;
+}
+/* En presentation, le titre se resserre pour laisser la place au contenu. */
+.appli[data-mode='presentation'] .section__titre {
+  font-size: clamp(1.3rem, 0.8rem + 1.5vw, 2.1rem);
+}
+
+.corps { display: flex; flex-direction: column; gap: clamp(0.9rem, 2.4vh, 1.8rem); }
+
+.section__entete { display: flex; flex-direction: column; gap: 0.5rem; }
+.section__numero {
+  font-family: var(--cote);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--isobathe);
+}
+.section__titre {
+  font-size: clamp(1.6rem, 0.9rem + 2.3vw, 3rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  max-width: 22ch;
+}
+.section__chapo {
+  max-width: 62ch;
+  color: var(--ecume-62);
+  font-size: clamp(0.95rem, 0.7rem + 0.5vw, 1.12rem);
+}
+
+.contenu { max-width: 1500px; width: 100%; }
+
+/* --------------------------------------------------------------------------
+   LE PANNEAU DE NOTES (touche N)
+   En surimpression translucide, en bas. Pas sur un second ecran : les eleves
+   n'auront qu'un videoprojecteur en recopie.
+   -------------------------------------------------------------------------- */
+.notes {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  z-index: 90;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(0.8rem, 2vw, 1.8rem);
+  padding: 0.85rem clamp(1rem, 2.5vw, 2rem);
+  background: rgb(4 20 27 / 0.93);
+  border-top: 1px solid var(--ecume-14);
+  backdrop-filter: blur(10px);
+  font-size: clamp(0.88rem, 0.7rem + 0.4vw, 1.05rem);
+}
+.notes__qui {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--cote);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--presentateur, var(--ecume));
+}
+.notes__qui::before {
+  content: '';
+  width: 0.6rem; height: 1.5rem;
+  background: var(--presentateur, var(--ecume));
+}
+.notes__texte { color: var(--ecume); line-height: 1.45; }
+.notes__compteur {
+  font-family: var(--cote);
+  font-size: 0.78rem;
+  color: var(--ecume-40);
+  text-align: right;
+  white-space: nowrap;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+.notes__compteur b { color: var(--sable); font-variant-numeric: tabular-nums; }
+
+/* Bandeau d'aide clavier, affiche a l'entree en mode presentation. */
+.aide-clavier {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: grid;
+  place-items: center;
+  background: rgb(4 20 27 / 0.95);
+  padding: var(--marge);
+}
+.aide-clavier__grille {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 0.5rem 2rem;
+  max-width: 62rem;
+  width: 100%;
+}
+.aide-clavier__ligne {
+  display: grid;
+  grid-template-columns: 8.5rem 1fr;
+  gap: 1rem;
+  align-items: baseline;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--ecume-08);
+}
+kbd {
+  font-family: var(--cote);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--sable);
+  border: 1px solid var(--ecume-14);
+  border-bottom-width: 2px;
+  padding: 0.12rem 0.42rem;
+  background: var(--ecume-08);
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------------------------------
+   ADAPTATION -- 1024x768 comme 1920x1080, et petits ecrans.
+   -------------------------------------------------------------------------- */
+@media (max-width: 900px) {
+  .appli { grid-template-columns: minmax(0, 1fr); }
+  .releve {
+    position: sticky;
+    height: auto;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.6rem var(--marge);
+    border-right: 0;
+    border-bottom: 1px solid var(--ecume-14);
+    overflow-x: auto;
+  }
+  .releve__entete, .releve__libelle { display: none; }
+  .releve__liste { flex-direction: row; overflow-x: auto; overflow-y: hidden; }
+  .releve__station { grid-template-columns: auto auto; width: auto; padding: 0.3rem 0.45rem; }
+  .releve__touche { display: none; }
+  .releve__pied { flex-direction: row; align-items: center; gap: 0.6rem; padding-right: 0; }
+  .jauge { width: 4rem; }
+  .notes { grid-template-columns: minmax(0, 1fr); gap: 0.35rem; }
+  .notes__compteur { text-align: left; flex-direction: row; gap: 0.8rem; }
+}
+
+/* Ecrans courts (1024x768 : 768 px de haut, il faut serrer). */
+@media (max-height: 820px) {
+  :root { --t-etape: 1.25s; }
+  .section { padding-block: clamp(1.5rem, 4vh, 2.5rem); gap: clamp(0.8rem, 2vh, 1.4rem); }
+}

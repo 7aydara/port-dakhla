@@ -1,0 +1,57 @@
+/* ==========================================================================
+   POLICES -- servies depuis public/fonts/, jamais depuis un CDN.
+   Les .woff2 sont commites dans le depot (voir scripts/vendor-fonts.sh).
+   font-display: block -- on ne veut pas d'un changement de police en plein
+   oral ; les fichiers sont locaux, l'attente est de l'ordre du milliseconde.
+   ========================================================================== */
+
+@font-face {
+  font-family: 'Atkinson Hyperlegible';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('/fonts/atkinson-hyperlegible-latin-400-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Atkinson Hyperlegible';
+  font-style: italic;
+  font-weight: 400;
+  font-display: block;
+  src: url('/fonts/atkinson-hyperlegible-latin-400-italic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Atkinson Hyperlegible';
+  font-style: normal;
+  font-weight: 700;
+  font-display: block;
+  src: url('/fonts/atkinson-hyperlegible-latin-700-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Iosevka';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('/fonts/iosevka-latin-400-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Iosevka';
+  font-style: italic;
+  font-weight: 400;
+  font-display: block;
+  src: url('/fonts/iosevka-latin-400-italic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Iosevka';
+  font-style: normal;
+  font-weight: 500;
+  font-display: block;
+  src: url('/fonts/iosevka-latin-500-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Iosevka';
+  font-style: normal;
+  font-weight: 700;
+  font-display: block;
+  src: url('/fonts/iosevka-latin-700-normal.woff2') format('woff2');
+}
