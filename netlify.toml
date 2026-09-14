@@ -1,0 +1,67 @@
+# ---------------------------------------------------------------------------
+# Déploiement Netlify.
+#
+# Sans ce fichier, Netlify doit deviner comment construire le site. S'il ne
+# devine pas, il sert la RACINE DU DÉPÔT — et la racine contient un index.html
+# de développement qui pointe sur `/src/main.tsx`. Un navigateur ne sait pas
+# exécuter du TypeScript : la page reste blanche.
+#
+# Ce qu'il faut publier, c'est `dist/`, produit par `npm run build`.
+# ---------------------------------------------------------------------------
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  # Vite 6 exige Node 18 ou plus. On épingle pour ne pas dépendre du défaut
+  # de Netlify, qui change au fil du temps.
+  NODE_VERSION = "22"
+  # `tsc -b` fait partie du build : les devDependencies sont nécessaires.
+  NPM_FLAGS = "--include=dev"
+
+# ---------------------------------------------------------------------------
+# Cache. Le site pèse 9,5 Mo, dont l'essentiel en séquences d'images. Sur le
+# wifi d'un établissement, la deuxième visite doit être instantanée.
+# ---------------------------------------------------------------------------
+
+# Les fichiers d'assets portent un hachage dans leur nom : ils ne changent
+# jamais sans changer de nom, donc on peut les garder indéfiniment.
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Séquences d'images, photos et polices : stables, mais sans hachage.
+# Un an de cache, avec revalidation possible.
+[[headers]]
+  for = "/frames/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+
+[[headers]]
+  for = "/fonts/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+
+[[headers]]
+  for = "/media/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+# La page elle-même est revalidée à chaque visite, sinon une correction de
+# dernière minute avant l'oral ne partirait jamais.
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# ---------------------------------------------------------------------------
+# PAS de redirection attrape-tout vers index.html.
+#
+# Le site n'a qu'une seule URL : la navigation se fait par fragment (#/present),
+# qui est traité côté navigateur. Une règle `/* -> /index.html 200` renverrait
+# la page HTML à la place des fichiers absents — notamment
+# media/carte-maroc.jpg, dont l'absence déclenche volontairement l'emplacement
+# réservé de la section 02. Le repli cesserait de fonctionner.
+# ---------------------------------------------------------------------------

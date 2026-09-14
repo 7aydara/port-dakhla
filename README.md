@@ -71,6 +71,37 @@ passage au pastel.
 
 ---
 
+## Déploiement
+
+Le dépôt contient un `netlify.toml` : Netlify n'a rien à deviner.
+
+| Réglage | Valeur |
+|---|---|
+| Build command | `npm run build` |
+| Publish directory | `dist` |
+| Node version | 22 |
+
+**Le piège à éviter.** Ce qu'il faut publier, c'est `dist/`, jamais la racine
+du dépôt. La racine contient un `index.html` de développement qui pointe sur
+`/src/main.tsx` — un navigateur ne sait pas exécuter du TypeScript, donc la
+page reste **blanche**, sans message d'erreur. C'est le symptôme d'un
+hébergeur qui sert le dépôt au lieu de le construire.
+
+Si le site est déjà déployé avec de mauvais réglages, les modifier dans
+l'interface ne suffit pas : il faut relancer un déploiement (*Trigger deploy →
+Clear cache and deploy site*).
+
+**Sans passer par git** : `npm run build`, puis glisser le dossier `dist/`
+(son contenu, pas le dossier parent) sur app.netlify.com/drop.
+
+Aucune redirection attrape-tout n'est configurée, et c'est volontaire : le
+site n'a qu'une seule URL — la navigation se fait par fragment (`#/present`),
+côté navigateur. Une règle `/* → /index.html 200` renverrait la page HTML à la
+place des fichiers absents, ce qui casserait le repli de la section 02 pour
+`media/carte-maroc.jpg`.
+
+---
+
 ## Fonctionnement hors ligne
 
 Le wifi de l'établissement n'est pas fiable, donc **aucun appel réseau au
