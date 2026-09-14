@@ -4,7 +4,9 @@
  * l'investissement et la zone industrielle.
  */
 
+import { useRef } from 'react';
 import { EnteteSection } from '../components/CadreSection';
+import { useSuivreEtape } from '../hooks/useSuivreEtape';
 import { Cote } from '../components/Cote';
 import { useEtape, etatCouche } from '../hooks/usePresentation';
 import { COMPOSANTES, PROJET, TRAFIC } from '../content/projet';
@@ -14,13 +16,15 @@ const INDEX = 1;
 
 export function Section01Projet() {
   const etape = useEtape();
+  const corps = useRef<HTMLDivElement>(null);
+  useSuivreEtape(corps, etape);
   const couche = (n: number) => etatCouche(n, etape);
 
   return (
     <div className="contenu">
       <EnteteSection index={INDEX} />
 
-      <div className="corps">
+      <div className="corps" ref={corps}>
         <div className="composantes">
           {COMPOSANTES.map((c, i) => (
             <article key={c.cle} className="composante" data-etat={couche(i + 1)}>
@@ -47,7 +51,7 @@ export function Section01Projet() {
           ))}
         </div>
 
-        <div className="bandeau-chiffres" data-etat={couche(4)}>
+        <div className="bandeau-chiffres" data-suivre data-etat={couche(4)}>
           <p className="bandeau-chiffres__item">
             <Cote valeur={PROJET.investissementMilliardsDh} taille="geant" nuance="près de" />
             <span className="bandeau-chiffres__glose">

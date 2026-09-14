@@ -5,7 +5,9 @@
  * lisible a l'ecran, ce qui evite les flottements le jour de l'oral.
  */
 
+import { useRef } from 'react';
 import { EnteteSection } from '../components/CadreSection';
+import { useSuivreEtape } from '../hooks/useSuivreEtape';
 import { useEtape, etatCouche } from '../hooks/usePresentation';
 import { BLOCS, PROBLEMATIQUE } from '../content/conclusion';
 import { PRESENTATEURS } from '../content/presentateurs';
@@ -14,6 +16,8 @@ const INDEX = 7;
 
 export function Section07Conclusion() {
   const etape = useEtape();
+  const corps = useRef<HTMLDivElement>(null);
+  useSuivreEtape(corps, etape);
 
   const pour = BLOCS.filter((b) => b.sens === 'pour');
   const limites = BLOCS.filter((b) => b.sens === 'limite');
@@ -25,7 +29,7 @@ export function Section07Conclusion() {
     <div className="contenu">
       <EnteteSection index={INDEX} />
 
-      <div className="corps">
+      <div className="corps" ref={corps}>
         <p className="problematique" data-etat={etatCouche(0, etape)}>
           {PROBLEMATIQUE}
         </p>
@@ -34,7 +38,7 @@ export function Section07Conclusion() {
           <section className="balance__plateau" data-sens="pour" aria-label="Arguments pour">
             <h3 className="balance__titre">Ce qui plaide pour</h3>
             {pour.map((b) => (
-              <article key={b.id} className="argument" data-etat={etatCouche(rang(b.id), etape)}>
+              <article key={b.id} className="argument" data-suivre data-etat={etatCouche(rang(b.id), etape)}>
                 <p
                   className="argument__par"
                   style={{ ['--presentateur' as string]: PRESENTATEURS[b.par].jeton }}
@@ -50,7 +54,7 @@ export function Section07Conclusion() {
           <section className="balance__plateau" data-sens="limite" aria-label="Limites">
             <h3 className="balance__titre">Ce qui reste en suspens</h3>
             {limites.map((b) => (
-              <article key={b.id} className="argument" data-etat={etatCouche(rang(b.id), etape)}>
+              <article key={b.id} className="argument" data-suivre data-etat={etatCouche(rang(b.id), etape)}>
                 <p
                   className="argument__par"
                   style={{ ['--presentateur' as string]: PRESENTATEURS[b.par].jeton }}

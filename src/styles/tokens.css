@@ -1,80 +1,91 @@
 /* ==========================================================================
-   JETONS DE DESIGN
-   La palette n'est pas choisie a l'ecran : elle est prelevee dans les images
-   aeriennes du site (moyennes de zones), puis calee sur les conventions de la
-   carte bathymetrique. Les valeurs d'origine sont notees en commentaire.
+   JETONS DE DESIGN — palette claire, beige et bleu ciel pastel.
+
+   Les pastels sont dans les FONDS et les remplissages ; le texte et les
+   accents, eux, sont des versions profondes des mêmes teintes. C'est ce qui
+   rend une palette pastel lisible : sans ça, du pastel sur du pastel devient
+   illisible au fond d'une salle de classe.
+
+   Chaque couleur de texte a été vérifiée par le calcul de contraste WCAG
+   contre les trois fonds du site. Les ratios sont notés en commentaire.
    ========================================================================== */
 
 :root {
-  /* --- Les bandes de sonde. Plus on descend dans le site, plus c'est profond. */
-  --abysse:    #07202b; /* ocean profond a l'aube #283C3F, assombri. Fond de page. */
-  --sonde:     #0e3a4c; /* eau de bassin #3A6577, assombrie. Surfaces surelevees. */
-  --isobathe:  #2c7a94; /* beton du viaduc #437594. Filets, regles, graduations.   */
+  /* --- Les fonds. Beige chaud en surface, bleu ciel pastel en profondeur. */
+  --sable: #f0e6d4; /* fond de page. Sable des dunes, éclairci.              */
+  --creme: #fbf6ec; /* surfaces surélevées : cartouches, panneaux.           */
+  --ciel:  #a9cfe4; /* bleu ciel pastel. Remplissages, bandes de profondeur. */
 
-  /* --- Le releve. */
-  --ecume:     #e3eaea; /* ciel d'aube #DBDCDC. Texte principal. Jamais de blanc pur :
-                           moins violent sur trois metres de videoprojecteur.       */
+  /* --- Les traits et les chiffres. */
+  --sonde: #2f6e8a; /* 4,57:1 sur sable — isobathes, filets, ET les chiffres.
+                       Un bleu de carte marine, assez foncé pour du texte.    */
 
-  /* --- Les accents. Le sable est un ACCENT, jamais un fond. */
-  --sable:     #e0a356; /* dune eclairee #DB984D, prelevee telle quelle.
-                           Les chiffres, la terre gagnee sur la mer, l'acquis.      */
-  --magenta-carte: #e9548c; /* convention SHOM / Admiralty : feux, zones reglementees,
-                           travaux. Ici : l'etape EN COURS et le focus clavier.     */
+  /* --- Le texte. */
+  --encre: #14323f; /* 10,90:1 sur sable, 12,51:1 sur crème. Tout le texte.   */
 
-  /* --- Derives. Pas de septieme couleur : des transparences de l'ecume. */
-  --ecume-62:  rgb(227 234 234 / 0.62);
-  --ecume-40:  rgb(227 234 234 / 0.40);
-  --ecume-14:  rgb(227 234 234 / 0.14);
-  --ecume-08:  rgb(227 234 234 / 0.08);
-  --sable-20:  rgb(224 163 86 / 0.20);
-  --magenta-18: rgb(233 84 140 / 0.18);
+  /* --- Les deux accents. */
+  --ocre:   #8f4a1a; /* 5,37:1 — les ouvrages construits : digues, terre-plein,
+                        enrochements. La couleur de ce qui est gagné sur la mer. */
+  --corail: #ae4034; /* 4,74:1 — RÉSERVÉ à l'étape en cours et au focus clavier.
+                        Environ 2 % de la surface, jamais plus.               */
 
-  /* --- Fond de section : une bande d'isobathe de plus a chaque section.
-         Pilote par --profondeur (0 a 1) depuis le JS.                             */
+  /* --- Dérivés : des transparences d'encre, pas de nouvelles couleurs. */
+  --encre-62: rgb(20 50 63 / 0.72);
+  --encre-40: rgb(20 50 63 / 0.55);
+  --encre-14: rgb(20 50 63 / 0.18);
+  --encre-08: rgb(20 50 63 / 0.10);
+  --ocre-20:   rgb(143 74 26 / 0.22);
+  --corail-18: rgb(174 64 52 / 0.12);
+
+  /* --- Fond de section : on descend, le beige de surface vire au bleu ciel
+         de profondeur. Piloté par --profondeur (0 à 1) depuis le JS.         */
   --profondeur: 0;
-  --fond: color-mix(in oklab, var(--sonde) calc((1 - var(--profondeur)) * 100%), var(--abysse));
+  --fond: color-mix(in oklab, var(--sable) calc((1 - var(--profondeur)) * 100%), #dceef6);
 
   /* --- Typographie. Deux familles, toutes deux locales. */
   --texte: 'Atkinson Hyperlegible', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --cote: 'Iosevka', ui-monospace, 'SF Mono', 'Cascadia Mono', Consolas, monospace;
 
-  /* --- Rythme. Cale sur 1024x768 comme sur 1920x1080. */
+  /* --- Rythme. Calé sur 1024x768 comme sur 1920x1080. */
   --colonne-releve: clamp(9rem, 13vw, 14rem);
   --marge: clamp(1.25rem, 3.2vw, 3.5rem);
-  --t-etape: 1.4s; /* duree d'une revelation d'etape : entre 1,2 et 2 s */
+  --t-etape: 1.4s;
   --e-etape: cubic-bezier(0.22, 0.61, 0.36, 1);
 
-  /* --- Couleurs des trois presentateurs. Chacun la sienne, constante partout. */
-  --zayd:  #5ec8d8;
-  --fahd:  var(--sable);
-  --rayan: #b39ae0;
+  /* --- Couleurs des trois présentateurs. Toutes trois ≥ 5:1 sur le beige. */
+  --zayd:  #1f6688;
+  --fahd:  var(--ocre);
+  --rayan: #6a5495;
 }
 
 /* --------------------------------------------------------------------------
    MODE FORT CONTRASTE (touche C)
-   Assurance materielle : si la salle est claire ou le videoprojecteur fatigue,
-   les six bandes de sonde s'effondrent en un seul gris. On remonte le fond de
-   deux bandes et on epaissit les filets.
+   Sur fond clair, renforcer le contraste veut dire ÉCLAIRCIR le fond et
+   APPROFONDIR l'encre — l'inverse d'un thème sombre. Assurance matérielle
+   pour une salle très éclairée ou un vidéoprojecteur délavé.
    -------------------------------------------------------------------------- */
 :root[data-contraste='fort'] {
-  --abysse: #0d3242;
-  --sonde: #175169;
-  --isobathe: #6fb9d0;
-  --ecume: #ffffff;
-  --sable: #ffbe68;
-  --ecume-62: rgb(255 255 255 / 0.78);
-  --ecume-40: rgb(255 255 255 / 0.58);
-  --ecume-14: rgb(255 255 255 / 0.28);
-  --ecume-08: rgb(255 255 255 / 0.16);
+  --sable: #fffdf7;
+  --creme: #ffffff;
+  --ciel: #8cbfda;
+  --sonde: #1d5570;
+  --encre: #071a23;
+  --ocre: #71380f;
+  --corail: #96281c;
+  --encre-62: rgb(7 26 35 / 0.85);
+  --encre-40: rgb(7 26 35 / 0.68);
+  --encre-14: rgb(7 26 35 / 0.3);
+  --encre-08: rgb(7 26 35 / 0.18);
 }
 
 @theme inline {
-  --color-abysse: var(--abysse);
-  --color-sonde: var(--sonde);
-  --color-isobathe: var(--isobathe);
-  --color-ecume: var(--ecume);
   --color-sable: var(--sable);
-  --color-magenta: var(--magenta-carte);
+  --color-creme: var(--creme);
+  --color-ciel: var(--ciel);
+  --color-sonde: var(--sonde);
+  --color-encre: var(--encre);
+  --color-ocre: var(--ocre);
+  --color-corail: var(--corail);
   --font-texte: var(--texte);
   --font-cote: var(--cote);
 }

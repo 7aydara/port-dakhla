@@ -2,6 +2,7 @@ import { chromium } from 'playwright';
 import { existsSync } from 'node:fs';
 
 const BASE = 'http://localhost:5055/';
+
 const echecs = [];
 const ok = (c, m) => { console.log(`${c ? '  OK  ' : ' ECHEC'}  ${m}`); if (!c) echecs.push(m); };
 
@@ -11,6 +12,46 @@ const EXE = process.env.CHROME_BIN || '/opt/pw-browsers/chromium';
 const nav = await chromium.launch(
   existsSync(EXE) ? { executablePath: EXE } : {},
 );
+
+/* ---- 0. AUCUNE VARIABLE DE PALETTE MORTE ------------------------------- */
+/* Controle statique, avant meme d'ouvrir un navigateur. Un `var(--x)` qui
+   pointe vers un jeton inexistant ne casse rien visiblement : la couleur
+   disparait, simplement. C'est arrive lors du passage a la palette pastel,
+   ou les fichiers .ts n'avaient pas ete renommes avec le reste. */
+{
+  const { readFileSync, readdirSync, statSync } = await import('node:fs');
+  const { join } = await import('node:path');
+
+  const fichiers = [];
+  (function parcours(d) {
+    for (const e of readdirSync(d)) {
+      const chemin = join(d, e);
+      if (statSync(chemin).isDirectory()) parcours(chemin);
+      else if (/\.(ts|tsx|css)$/.test(e)) fichiers.push(chemin);
+    }
+  })('src');
+
+  const definis = new Set();
+  const utilises = new Map();
+  for (const f of fichiers) {
+    const src = readFileSync(f, 'utf8');
+    // Une declaration peut suivre un `{` ou un `;` sur la meme ligne :
+    // `.pilier[data-pilier='social'] { --teinte-pilier: var(--zayd); }`
+    for (const m of src.matchAll(/(?:^|[{;])\s*(--[a-z0-9-]+)\s*:/gm)) definis.add(m[1]);
+    for (const m of src.matchAll(/var\((--[a-z0-9-]+)/g)) {
+      if (!utilises.has(m[1])) utilises.set(m[1], f);
+    }
+  }
+  // Les variables posees depuis le JS ou en style inline ne sont pas declarees
+  // en CSS : on les autorise explicitement.
+  const horsCss = new Set(['--presentateur', '--teinte']);
+  const mortes = [...utilises].filter(([v]) => !definis.has(v) && !horsCss.has(v));
+
+  ok(
+    mortes.length === 0,
+    `jetons de palette : ${utilises.size} utilisés, ${mortes.length} sans définition${mortes.length ? ' -> ' + mortes.map(([v, f]) => `${v} (${f})`).join(', ') : ''}`,
+  );
+}
 
 /* ---- 1. AUCUNE REQUETE RESEAU EXTERNE ---------------------------------- */
 {
@@ -291,6 +332,105 @@ for (const vp of [{ width: 1024, height: 768 }, { width: 1920, height: 1080 }, {
   ok(
     inconnus.length === 0,
     `chiffres affiches : ${releves.size} releves, ${inconnus.length} hors dossier${inconnus.length ? ' -> ' + inconnus.join(' | ') : ''}`,
+  );
+  await ctx.close();
+}
+
+/* ---- 13. CONTRASTE DU TEXTE (WCAG) ------------------------------------ */
+/* La palette est claire et pastel : c'est precisement le reglage ou le texte
+   devient illisible au fond d'une salle. On mesure donc les couleurs REELLEMENT
+   calculees par le navigateur, sur chaque section, et on verifie les seuils.
+   La section 00 est exclue : son texte est pose sur une photographie, pas sur
+   un fond uni, et repond a ses propres regles. */
+{
+  const ctx = await nav.newContext({ viewport: { width: 1920, height: 1080 } });
+  const p = await ctx.newPage();
+  await p.goto(BASE + '#/present', { waitUntil: 'domcontentloaded' });
+  await p.waitForTimeout(1200);
+  await p.keyboard.press('Space');
+
+  const mesure = () =>
+    p.evaluate(() => {
+      const lin = (c) => {
+        c /= 255;
+        return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+      };
+      const lum = ([r, g, b]) => 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
+      /* Les couleurs sont resolues PAR LE NAVIGATEUR, via un canvas 1x1 :
+         un fond declare en color-mix() se calcule en oklab(), qu'aucun
+         parseur naif ne sait lire. On peint, on relit les octets sRGB. */
+      const cv = document.createElement('canvas');
+      cv.width = cv.height = 1;
+      const cx = cv.getContext('2d', { willReadFrequently: true });
+      const versRgb = (couleur) => {
+        cx.clearRect(0, 0, 1, 1);
+        cx.fillStyle = '#000';
+        cx.fillStyle = couleur;
+        cx.fillRect(0, 0, 1, 1);
+        const d = cx.getImageData(0, 0, 1, 1).data;
+        return { rgb: [d[0], d[1], d[2]], a: d[3] / 255 };
+      };
+      const rgb = (v) => versRgb(v).rgb;
+      /* Remonte jusqu'au premier ancetre au fond reellement opaque. */
+      const fond = (el) => {
+        for (let n = el; n; n = n.parentElement) {
+          const bg = getComputedStyle(n).backgroundColor;
+          if (!bg) continue;
+          const r = versRgb(bg);
+          if (r.a > 0.92) return r.rgb;
+        }
+        return [255, 255, 255];
+      };
+      const contraste = (a, b) => {
+        const [hi, lo] = [lum(a), lum(b)].sort((x, y) => y - x);
+        return (hi + 0.05) / (lo + 0.05);
+      };
+
+      const resultats = [];
+      const noeuds = document.querySelectorAll(
+        '.section:not([data-section="intro"]) p, .section:not([data-section="intro"]) h2,' +
+          '.section:not([data-section="intro"]) h3, .section:not([data-section="intro"]) h4,' +
+          '.section:not([data-section="intro"]) h5, .section:not([data-section="intro"]) li,' +
+          '.section:not([data-section="intro"]) dt, .section:not([data-section="intro"]) dd,' +
+          '.section:not([data-section="intro"]) a, .section:not([data-section="intro"]) span.cote',
+      );
+      for (const el of noeuds) {
+        const txt = el.textContent.trim();
+        if (!txt) continue;
+        const st = getComputedStyle(el);
+        if (st.visibility === 'hidden' || Number(st.opacity) < 0.5) continue;
+        const r = el.getBoundingClientRect();
+        if (r.width === 0 || r.height === 0) continue;
+        const px = parseFloat(st.fontSize);
+        const gras = Number(st.fontWeight) >= 700;
+        // Seuil WCAG : 3:1 pour du gros texte (>=24 px, ou >=18.66 px en gras).
+        const grosTexte = px >= 24 || (gras && px >= 18.66);
+        const seuil = grosTexte ? 3 : 4.5;
+        const c = contraste(rgb(st.color), fond(el));
+        if (c < seuil) {
+          resultats.push({
+            texte: txt.slice(0, 42),
+            ratio: Math.round(c * 100) / 100,
+            seuil,
+            px: Math.round(px),
+            classe: el.className.toString().slice(0, 30),
+          });
+        }
+      }
+      return resultats;
+    });
+
+  const fautifs = [];
+  for (let s = 1; s < 9; s++) {
+    await p.keyboard.press(String(s + 1));
+    await p.waitForTimeout(260);
+    const r = await mesure();
+    r.forEach((x) => fautifs.push(`s0${s} « ${x.texte} » ${x.ratio}:1 < ${x.seuil} (${x.classe})`));
+  }
+
+  ok(
+    fautifs.length === 0,
+    `contraste WCAG du texte sur les 8 sections de contenu${fautifs.length ? ' -> ' + fautifs.slice(0, 6).join(' | ') : ' : tout au-dessus du seuil'}`,
   );
   await ctx.close();
 }

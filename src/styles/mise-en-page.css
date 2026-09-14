@@ -25,8 +25,8 @@
   flex-direction: column;
   gap: 0.9rem;
   padding: clamp(1rem, 2.4vh, 2rem) 0 clamp(1rem, 2.4vh, 2rem) var(--marge);
-  border-right: 1px solid var(--ecume-14);
-  background: rgb(7 32 43 / 0.5);
+  border-right: 1px solid var(--encre-14);
+  background: rgb(251 246 236 / 0.82);
   backdrop-filter: blur(6px);
   z-index: 40;
 }
@@ -34,7 +34,7 @@
   font-family: var(--cote);
   font-size: 0.66rem;
   letter-spacing: 0.16em;
-  color: var(--ecume-40);
+  color: var(--encre-40);
   text-transform: uppercase;
 }
 .releve__liste {
@@ -45,7 +45,7 @@
   flex: 1;
   min-height: 0;
   scrollbar-width: thin;
-  scrollbar-color: var(--ecume-14) transparent;
+  scrollbar-color: var(--encre-14) transparent;
 }
 .releve__station {
   display: grid;
@@ -58,40 +58,40 @@
   font-family: var(--cote);
   font-size: 0.72rem;
   line-height: 1.25;
-  color: var(--ecume-40);
+  color: var(--encre-40);
   transition: color 260ms ease;
 }
-.releve__station:hover { color: var(--ecume); }
-.releve__station[aria-current='true'] { color: var(--ecume); }
+.releve__station:hover { color: var(--encre); }
+.releve__station[aria-current='true'] { color: var(--encre); }
 .releve__numero { font-weight: 700; font-variant-numeric: tabular-nums; }
 /* La pastille de station : creuse si a venir, pleine si acquise,
-   magenta si c'est la station courante. */
+   corail si c'est la station courante. */
 .releve__pastille {
   width: 0.55rem; height: 0.55rem;
-  border: 1px solid var(--isobathe);
+  border: 1px solid var(--sonde);
   border-radius: 50%;
   transition: background-color 260ms ease, border-color 260ms ease;
 }
 .releve__station[data-station='acquise'] .releve__pastille {
-  background: var(--sable);
-  border-color: var(--sable);
+  background: var(--ocre);
+  border-color: var(--ocre);
 }
 .releve__station[aria-current='true'] .releve__pastille {
-  background: var(--magenta-carte);
-  border-color: var(--magenta-carte);
-  box-shadow: 0 0 0 3px var(--magenta-18);
+  background: var(--corail);
+  border-color: var(--corail);
+  box-shadow: 0 0 0 3px var(--corail-18);
 }
 .releve__touche {
   font-family: var(--cote);
   font-size: 0.6rem;
-  color: var(--ecume-40);
-  border: 1px solid var(--ecume-08);
+  color: var(--encre-40);
+  border: 1px solid var(--encre-08);
   padding: 0 0.26rem;
   line-height: 1.5;
 }
 .releve__station[aria-current='true'] .releve__touche {
-  color: var(--sable);
-  border-color: var(--sable-20);
+  color: var(--ocre);
+  border-color: var(--ocre-20);
 }
 .releve__libelle {
   overflow: hidden;
@@ -109,19 +109,19 @@
 .releve__sonde {
   font-family: var(--cote);
   font-size: 0.7rem;
-  color: var(--ecume-40);
+  color: var(--encre-40);
   letter-spacing: 0.06em;
 }
-.releve__sonde b { color: var(--sable); font-weight: 700; }
+.releve__sonde b { color: var(--ocre); font-weight: 700; }
 /* Jauge d'etapes de la section courante. */
 .jauge {
   height: 3px;
-  background: var(--ecume-08);
+  background: var(--encre-08);
   overflow: hidden;
 }
 .jauge__remplissage {
   height: 100%;
-  background: var(--magenta-carte);
+  background: var(--corail);
   transform-origin: left;
   transition: transform 420ms var(--e-etape);
 }
@@ -165,7 +165,7 @@
   min-height: 0;
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: var(--ecume-14) transparent;
+  scrollbar-color: var(--encre-14) transparent;
 }
 /* En presentation, le titre se resserre pour laisser la place au contenu. */
 .appli[data-mode='presentation'] .section__titre {
@@ -180,7 +180,7 @@
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.2em;
-  color: var(--isobathe);
+  color: var(--sonde);
 }
 .section__titre {
   font-size: clamp(1.6rem, 0.9rem + 2.3vw, 3rem);
@@ -191,7 +191,7 @@
 }
 .section__chapo {
   max-width: 62ch;
-  color: var(--ecume-62);
+  color: var(--encre-62);
   font-size: clamp(0.95rem, 0.7rem + 0.5vw, 1.12rem);
 }
 
@@ -211,8 +211,11 @@
   align-items: center;
   gap: clamp(0.8rem, 2vw, 1.8rem);
   padding: 0.85rem clamp(1rem, 2.5vw, 2rem);
-  background: rgb(4 20 27 / 0.93);
-  border-top: 1px solid var(--ecume-14);
+  /* Le panneau de notes reste le seul bloc sombre du site : posé sur une
+     image ou sur un schéma clair, il faut qu'il se détache sans discussion. */
+  background: rgb(20 50 63 / 0.95);
+  color: #fbf6ec;
+  border-top: 2px solid var(--ocre);
   backdrop-filter: blur(10px);
   font-size: clamp(0.88rem, 0.7rem + 0.4vw, 1.05rem);
 }
@@ -225,25 +228,31 @@
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--presentateur, var(--ecume));
+  color: var(--presentateur, var(--encre));
 }
 .notes__qui::before {
   content: '';
   width: 0.6rem; height: 1.5rem;
-  background: var(--presentateur, var(--ecume));
+  background: var(--presentateur, var(--encre));
 }
-.notes__texte { color: var(--ecume); line-height: 1.45; }
+.notes__texte { color: #fbf6ec; line-height: 1.45; }
 .notes__compteur {
   font-family: var(--cote);
   font-size: 0.78rem;
-  color: var(--ecume-40);
+  color: rgb(251 246 236 / 0.62);
   text-align: right;
   white-space: nowrap;
   display: flex;
   flex-direction: column;
   gap: 0.15rem;
 }
-.notes__compteur b { color: var(--sable); font-variant-numeric: tabular-nums; }
+.notes__compteur b { color: #f0c9a0; font-variant-numeric: tabular-nums; }
+/* Les touches affichées dans le panneau sombre s'inversent aussi. */
+.notes kbd {
+  color: #f0c9a0;
+  border-color: rgb(251 246 236 / 0.28);
+  background: rgb(251 246 236 / 0.1);
+}
 
 /* Bandeau d'aide clavier, affiche a l'entree en mode presentation. */
 .aide-clavier {
@@ -252,7 +261,7 @@
   z-index: 120;
   display: grid;
   place-items: center;
-  background: rgb(4 20 27 / 0.95);
+  background: rgb(251 246 236 / 0.97);
   padding: var(--marge);
 }
 .aide-clavier__grille {
@@ -268,17 +277,17 @@
   gap: 1rem;
   align-items: baseline;
   padding: 0.4rem 0;
-  border-bottom: 1px solid var(--ecume-08);
+  border-bottom: 1px solid var(--encre-08);
 }
 kbd {
   font-family: var(--cote);
   font-size: 0.78rem;
   font-weight: 700;
-  color: var(--sable);
-  border: 1px solid var(--ecume-14);
+  color: var(--ocre);
+  border: 1px solid var(--encre-14);
   border-bottom-width: 2px;
   padding: 0.12rem 0.42rem;
-  background: var(--ecume-08);
+  background: var(--encre-08);
   white-space: nowrap;
 }
 
@@ -295,7 +304,7 @@ kbd {
     gap: 0.7rem;
     padding: 0.6rem var(--marge);
     border-right: 0;
-    border-bottom: 1px solid var(--ecume-14);
+    border-bottom: 1px solid var(--encre-14);
     overflow-x: auto;
   }
   .releve__entete, .releve__libelle { display: none; }

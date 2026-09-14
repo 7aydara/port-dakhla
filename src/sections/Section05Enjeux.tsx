@@ -11,7 +11,9 @@
  * Etapes : 0-5 les six objectifs, 6-11 les six defis.
  */
 
+import { useRef } from 'react';
 import { EnteteSection } from '../components/CadreSection';
+import { useSuivreEtape } from '../hooks/useSuivreEtape';
 import { useEtape, etatCouche } from '../hooks/usePresentation';
 import { DEFIS, OBJECTIFS, PILIERS, type Pilier } from '../content/objectifs';
 
@@ -22,12 +24,14 @@ const ORDRE_PILIERS: readonly Pilier[] = ['social', 'economique', 'environnement
 export function Section05Enjeux() {
   const etape = useEtape();
   const auxDefis = etape >= PREMIER_DEFI;
+  const corps = useRef<HTMLDivElement>(null);
+  useSuivreEtape(corps, etape);
 
   return (
     <div className="contenu">
       <EnteteSection index={INDEX} />
 
-      <div className="corps">
+      <div className="corps" ref={corps}>
         <div className="enjeux" data-volet={auxDefis ? 'defis' : 'objectifs'}>
           {/* ---- Les objectifs : une programmation qui s'allonge ------------- */}
           <section className="enjeux__volet" aria-label="Objectifs annoncés">
@@ -36,7 +40,7 @@ export function Section05Enjeux() {
             </h3>
             <ol className="objectifs">
               {OBJECTIFS.map((o, i) => (
-                <li key={o.id} className="objectif" data-etat={etatCouche(i, etape)}>
+                <li key={o.id} className="objectif" data-suivre data-etat={etatCouche(i, etape)}>
                   <span className="objectif__rang" aria-hidden="true">
                     {String(i + 1).padStart(2, '0')}
                   </span>
@@ -72,7 +76,7 @@ export function Section05Enjeux() {
                       {defis.map((d) => {
                         const rang = PREMIER_DEFI + DEFIS.indexOf(d);
                         return (
-                          <li key={d.id} className="defi" data-etat={etatCouche(rang, etape)}>
+                          <li key={d.id} className="defi" data-suivre data-etat={etatCouche(rang, etape)}>
                             <h5 className="defi__titre">{d.titre}</h5>
                             <p className="defi__detail">{d.detail}</p>
                             {d.aussi && (
@@ -89,7 +93,7 @@ export function Section05Enjeux() {
               })}
             </div>
 
-            <p className="enjeux__lecture" data-etat={etatCouche(DEFIS.length + PREMIER_DEFI - 1, etape)}>
+            <p className="enjeux__lecture" data-suivre data-etat={etatCouche(DEFIS.length + PREMIER_DEFI - 1, etape)}>
               La moitié des défis relèvent du pilier environnemental. C’est
               exactement là que se jouera la durabilité du projet.
             </p>

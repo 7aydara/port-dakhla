@@ -86,11 +86,11 @@ export function SchemaPort({ decalage = 0 }: ProprietesSchema) {
           {/* Trame du terre-plein : des hachures, pas un aplat -- on lit
               immediatement que c'est une surface construite. */}
           <pattern id="trame-remblai" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(38)">
-            <line x1="0" y1="0" x2="0" y2="9" stroke="var(--sable)" strokeWidth="2.6" opacity="0.55" />
+            <line x1="0" y1="0" x2="0" y2="9" stroke="var(--ocre)" strokeWidth="2.6" opacity="0.55" />
           </pattern>
           <pattern id="trame-zone" width="16" height="16" patternUnits="userSpaceOnUse">
-            <path d="M 0,16 L 16,0" stroke="var(--sable)" strokeWidth="1.1" opacity="0.4" />
-            <path d="M 0,0 L 16,16" stroke="var(--sable)" strokeWidth="1.1" opacity="0.2" />
+            <path d="M 0,16 L 16,0" stroke="var(--ocre)" strokeWidth="1.1" opacity="0.4" />
+            <path d="M 0,0 L 16,16" stroke="var(--ocre)" strokeWidth="1.1" opacity="0.2" />
           </pattern>
         </defs>
 
@@ -98,11 +98,13 @@ export function SchemaPort({ decalage = 0 }: ProprietesSchema) {
         <g data-etat={couche(0)}>
           {/* Bandes de profondeur, de la plus profonde a la plus faible. */}
           <g className="schema__bandes" aria-hidden="true">
-            <rect x="0" y="0" width="1000" height="760" fill="var(--abysse)" />
-            <path d={`${ISOBATHES[3].d} L 1000,760 L 1000,0 Z`} fill="#0a2c3a" />
-            <path d={`${ISOBATHES[2].d} L 1000,760 L 1000,0 Z`} fill="#0d3949" />
-            <path d={`${ISOBATHES[1].d} L 1000,760 L 1000,0 Z`} fill="#104658" />
-            <path d={`${ISOBATHES[0].d} L 1000,760 L 1000,0 Z`} fill="#145367" />
+            {/* Bandes de profondeur : plus c'est profond, plus le bleu est
+                soutenu. Cinq paliers pastel, du large (à gauche) vers la côte. */}
+            <rect x="0" y="0" width="1000" height="760" fill="#7fb6d4" />
+            <path d={`${ISOBATHES[3].d} L 1000,760 L 1000,0 Z`} fill="#94c4dd" />
+            <path d={`${ISOBATHES[2].d} L 1000,760 L 1000,0 Z`} fill="#a9cfe4" />
+            <path d={`${ISOBATHES[1].d} L 1000,760 L 1000,0 Z`} fill="#c2deec" />
+            <path d={`${ISOBATHES[0].d} L 1000,760 L 1000,0 Z`} fill="#dcedf5" />
           </g>
 
           <path d={TERRE} className="schema__terre" />

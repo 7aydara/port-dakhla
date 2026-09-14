@@ -26,14 +26,48 @@ npx serve dist       # sert dist/, fonctionne wifi coupé
 
 ```bash
 npx serve dist &     # sur le port 5055
-npm run verif        # 22 contrôles automatisés dans un navigateur réel
+npm run verif        # 24 contrôles automatisés dans un navigateur réel
 ```
 
 `npm run verif` contrôle les critères d'acceptation un par un : absence totale
 de requête réseau, parcours intégral au clavier, aucune étape sautée en appuis
 rapides, rattrapage instantané des animations, `prefers-reduced-motion`,
-focus visible, absence de débordement en 1024×768 / 1920×1080 / 390×844, et
-**la conformité de tous les chiffres affichés au dossier de référence**.
+focus visible, absence de débordement en 1024×768 / 1920×1080 / 390×844,
+**la conformité de tous les chiffres affichés au dossier de référence**, et
+**le contraste WCAG de chaque nœud de texte** sur les huit sections de contenu.
+
+---
+
+## La palette
+
+Beige et bleu ciel pastel. Les pastels sont dans les **fonds** et les
+remplissages ; le texte et les accents sont des versions **profondes** des
+mêmes teintes. C'est ce qui rend une palette pastel lisible : sans ça, du
+pastel sur du pastel devient illisible au fond d'une salle de classe.
+
+| Jeton | Hex | Rôle | Contraste sur le beige |
+|---|---|---|---|
+| `--sable` | `#F0E6D4` | fond de page | — |
+| `--creme` | `#FBF6EC` | surfaces surélevées | — |
+| `--ciel` | `#A9CFE4` | bleu ciel pastel, bandes de profondeur | — |
+| `--sonde` | `#2F6E8A` | isobathes, filets, **et les chiffres** | 4,57:1 |
+| `--encre` | `#14323F` | tout le texte | **10,90:1** |
+| `--ocre` | `#8F4A1A` | ouvrages construits : digues, terre-plein | 5,37:1 |
+| `--corail` | `#AE4034` | étape en cours et focus clavier, ~2 % de la surface | 4,74:1 |
+
+Deux exceptions au fond clair, toutes deux justifiées : le **panneau de notes**
+reste sombre pour se détacher quel que soit ce qu'il recouvre, et le **titre de
+l'intro** est en clair parce qu'il est posé sur une photographie, pas sur le
+beige.
+
+La touche <kbd>C</kbd> ne fonctionne pas comme un thème sombre : sur fond clair,
+renforcer le contraste veut dire **éclaircir le fond et approfondir l'encre**.
+
+Deux contrôles automatisés protègent cette palette : le calcul de contraste
+WCAG sur chaque nœud de texte, et une vérification statique qu'aucun `var(--x)`
+ne pointe vers un jeton inexistant — une couleur qui disparaît silencieusement
+ne casse rien de visible, et c'est précisément ce qui est arrivé pendant le
+passage au pastel.
 
 ---
 
@@ -216,6 +250,11 @@ reste un `TODO` visible plutôt qu'un chiffre approché :
   lecteurs d'écran.
 - `prefers-reduced-motion: reduce` donne l'expérience **complète** : les états
   finaux sont atteints immédiatement, la séquence des étapes reste entière.
+- Contraste WCAG vérifié par le calcul sur chaque nœud de texte : 4,5:1 pour le
+  texte courant, 3:1 pour le gros texte. Aucune exception.
+- Sur les sections longues, l'élément dont le présentateur est en train de
+  parler est automatiquement ramené dans le champ — sans jamais faire défiler
+  l'en-tête de section, qui reste son repère.
 - Lien d'évitement en première tabulation.
 - Le schéma du port porte un `<title>` et une `<desc>` qui décrivent les six
   couches.
