@@ -858,3 +858,13 @@ body.chargement-en-cours { overflow: hidden; }
 .trafic__liste li { display: flex; flex-direction: column; }
 .trafic__unite { font-family: var(--cote); font-size: 0.72rem; color: var(--encre-62); }
 .trafic__glose { font-size: 0.76rem; color: var(--encre-40); }
+
+/* Empreinte de version, en bas du panneau d'aide. Discrete, mais lisible :
+   elle permet de dire quelle build est en ligne sans avoir a la deviner. */
+.aide-clavier__version {
+  margin-top: 1.6rem;
+  font-family: var(--cote);
+  font-size: 0.68rem;
+  color: var(--encre-40);
+  letter-spacing: 0.06em;
+}

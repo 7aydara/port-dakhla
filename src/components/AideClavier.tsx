@@ -52,6 +52,9 @@ export function AideClavier() {
         <p className="aide-clavier__sortie">
           Appuyez sur n’importe quelle touche pour commencer.
         </p>
+        <p className="aide-clavier__version">
+          version {__VERSION__} · construite le {__CONSTRUIT_LE__}
+        </p>
       </div>
     </div>
   );
