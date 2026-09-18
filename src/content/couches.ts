@@ -97,4 +97,16 @@ export const COUCHES: readonly Couche[] = [
       { nom: 'Route de raccordement à la RN 1', valeur: 7, unite: 'km', teinte: 'var(--encre-40)' },
     ],
   },
+  {
+    cle: 'fonctionnement',
+    nom: 'Comment le port fonctionne',
+    millesime: 'la chaîne complète, de la passe à la RN 1',
+    note: 'C’est cette chaîne qui distingue un port d’un simple point de débarquement.',
+    teinte: 'var(--or)',
+    details: [
+      { nom: '① Les navires entrent par la passe', note: 'entre les deux digues', teinte: 'var(--or)' },
+      { nom: '② Le viaduc ramène à terre', note: 'depuis le port-îlot', teinte: 'var(--or)' },
+      { nom: '③ La route rejoint la RN 1', note: 'via la zone industrielle', teinte: 'var(--or)' },
+    ],
+  },
 ];

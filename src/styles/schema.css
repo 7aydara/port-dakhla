@@ -179,7 +179,7 @@
 /* --- La zone industrielle et la route ------------------------------------ */
 .schema__zone {
   fill: url(#trame-zone);
-  stroke: var(--carmin);
+  stroke: var(--trame);
   stroke-width: 1.8;
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
@@ -285,4 +285,100 @@
   .schema-scene { grid-template-columns: minmax(0, 1fr); }
   .schema__svg { max-height: none; }
   .legendes { max-height: none; overflow: visible; }
+}
+
+/* --------------------------------------------------------------------------
+   LES FLUX (couche 7) -- comment le port fonctionne.
+   Un trait creux double d'une ombre claire, pour rester lisible aussi bien
+   sur l'eau que sur le sable. Le tiret defile : c'est ce defilement qui dit
+   le sens, pas la seule pointe.
+   -------------------------------------------------------------------------- */
+.schema__flux-ombre {
+  fill: none;
+  stroke: var(--papier);
+  stroke-width: 9;
+  stroke-linecap: round;
+  opacity: 0.75;
+}
+.schema__flux {
+  fill: none;
+  stroke: var(--or);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-dasharray: 16 11;
+  animation: marche 1.5s linear infinite;
+}
+@keyframes marche {
+  to { stroke-dashoffset: -27; }
+}
+.schema__flux-pastille { fill: var(--or); }
+.schema__flux-numero {
+  font-family: var(--cote);
+  font-size: 22px;
+  font-weight: 700;
+  fill: var(--papier);
+}
+
+/* Sans le mouvement, le tiret se fige : on le remplace par un trait plein,
+   qui garde le sens grace a la pointe. */
+@media (prefers-reduced-motion: reduce) {
+  .schema__flux { animation: none; stroke-dasharray: none; }
+}
+
+/* --------------------------------------------------------------------------
+   LA COLONNE DE DROITE : la vue reelle, puis les legendes.
+   -------------------------------------------------------------------------- */
+.colonne-droite {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  min-width: 0;
+}
+
+.chantier { margin: 0; display: flex; flex-direction: column; gap: 0.35rem; }
+.chantier__cadre {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--encre-14);
+  background: var(--papier);
+  overflow: hidden;
+}
+.chantier__toile { width: 100%; height: 100%; display: block; }
+.chantier__repli {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--cote);
+  font-size: 0.72rem;
+  color: var(--encre-40);
+}
+.chantier__etiquette {
+  position: absolute;
+  left: 0.5rem;
+  bottom: 0.5rem;
+  font-family: var(--cote);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--encre);
+  background: rgb(247 249 253 / 0.92);
+  border: 1px solid var(--encre-14);
+  padding: 0.16rem 0.44rem;
+}
+.chantier__note {
+  font-family: var(--cote);
+  font-size: 0.62rem;
+  line-height: 1.45;
+  color: var(--encre-40);
+}
+
+/* En presentation, seule la colonne de legendes defile : la vue reelle et le
+   plan restent entiers a l'ecran. */
+.colonne-droite .legendes[data-mode='presentation'] {
+  max-height: none;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
 }

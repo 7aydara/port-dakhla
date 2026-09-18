@@ -7,6 +7,7 @@
 import { useEffect, useRef } from 'react';
 import { EnteteSection } from '../components/CadreSection';
 import { SchemaPort } from '../components/SchemaPort';
+import { VueChantier } from '../components/VueChantier';
 import { Cote } from '../components/Cote';
 import { useEtape, etatCouche, usePresentation } from '../hooks/usePresentation';
 import { COUCHES } from '../content/couches';
@@ -48,7 +49,12 @@ export function Section03Construction() {
         <div className="schema-scene">
           <SchemaPort />
 
-          <div className="legendes" ref={colonne} data-mode={etat.mode}>
+          <div className="colonne-droite">
+            {/* Le plan a gauche, le site reel a droite. Ils avancent ensemble :
+                la correspondance se fait par l'etape, pas par le pixel. */}
+            <VueChantier etape={etape} nombreEtapes={COUCHES.length} />
+
+            <div className="legendes" ref={colonne} data-mode={etat.mode}>
             {COUCHES.map((c, i) => {
               const etat = etatCouche(i, etape);
               return (
@@ -103,6 +109,7 @@ export function Section03Construction() {
               {CHANTIER.rotation}. Le remblai principal atteignait{' '}
               {nombre(44)}&nbsp;% en juin 2026.
             </p>
+            </div>
           </div>
         </div>
       </div>

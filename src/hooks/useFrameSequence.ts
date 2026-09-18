@@ -184,9 +184,13 @@ function obtenir(dossier: string, nombre: number): Ressource {
 export function useFrameSequence({
   dossier,
   nombre,
+  voile: avecVoile = true,
 }: {
   readonly dossier: string;
   readonly nombre: number;
+  /** Voile de lisibilite peint dans la toile. Utile sous un titre, pas
+   *  ailleurs : une vue de chantier doit rester une image franche. */
+  readonly voile?: boolean;
 }): Sequence {
   const res = useRef<Ressource>(undefined as unknown as Ressource);
   if (!res.current) res.current = obtenir(dossier, nombre);
@@ -207,6 +211,9 @@ export function useFrameSequence({
   const voile = useRef<{ bas: CanvasGradient | null; gauche: CanvasGradient | null; cle: string }>({
     bas: null, gauche: null, cle: '',
   });
+  // `dessiner` est fige au premier rendu : l'option passe par un ref.
+  const veutVoile = useRef(avecVoile);
+  veutVoile.current = avecVoile;
 
   const dessiner = useRef((canvas: HTMLCanvasElement | null, index: number) => {
     if (!canvas) return;
@@ -262,6 +269,8 @@ export function useFrameSequence({
        meme toile, le voile ne coute qu'un remplissage de degrade.
        Il n'est pas decoratif : sans lui, le titre clair passe sur une dune
        claire et devient illisible au videoprojecteur. */
+    if (!veutVoile.current) return;
+
     const v = voile.current;
     const cle = `${largeur}x${hauteur}`;
     if (v.cle !== cle) {

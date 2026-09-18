@@ -55,16 +55,12 @@ echo "Sequence d'intro (survol de la cote saharienne)"
 sequence hero hero.mp4 9 1440 74 hd
 sequence hero hero.mp4 9  960 70 sd
 
-# Survol du chantier. Produite a la demande, mais PAS commitee (.gitignore) :
-# aucune des neuf sections ne l'utilise aujourd'hui et elle pese 8,4 Mo.
-# Passer CHANTIER=1 pour la generer.
-if [ "${CHANTIER:-0}" = "1" ]; then
-  echo "Sequence de chantier (survol du port en construction)"
-  sequence chantier chantier.mp4 20 1024 62 hd
-  sequence chantier chantier.mp4 20  640 58 sd
-else
-  echo "Sequence de chantier : ignoree (CHANTIER=1 pour la generer)"
-fi
+# Survol du chantier : la vue reelle du site, accouplee au schema en
+# section 03. Soixante images suffisent -- le panneau est deux fois plus petit
+# que l'intro et la camera avance par etapes, pas au fil du defilement.
+echo "Survol du chantier (vue reelle, section 03)"
+sequence chantier chantier.mp4 6 1100 72 hd
+sequence chantier chantier.mp4 6  700 66 sd
 
 echo "Images fixes"
 # Repli de l'intro : si le prechargement des images echoue, on affiche celle-ci.

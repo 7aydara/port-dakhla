@@ -4,7 +4,3 @@ dist/
 .DS_Store
 tmp/
 
-# Sequence du survol du chantier : produite par `npm run frames`, mais non
-# commitee. Aucune des neuf sections ne l'utilise aujourd'hui, et elle pese
-# 8,4 Mo. Voir README, section « Les medias ».
-public/frames/chantier/

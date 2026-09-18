@@ -301,13 +301,21 @@ FFMPEG=$(node -p "require('ffmpeg-static')") npm run frames
 Poids mesurés : environ 41 Ko par image en 1280 px, 28 Ko en 1024 px, 13 Ko en
 640 px. Le site complet pèse **9,6 Mo**, largement sous la limite de 25 Mo.
 
-Le script sait aussi produire la séquence du **survol du chantier** (200 images,
-8,4 Mo), mais elle n'est ni générée par défaut ni commitée : aucune des neuf
-sections décrites dans le brief ne l'utilise. Pour la produire :
+Le **survol du chantier** (60 images, 2 Mo) alimente la vue réelle de la
+section 03.
 
-```bash
-CHANTIER=1 FFMPEG=$(node -p "require('ffmpeg-static')") npm run frames
-```
+### Pourquoi le plan et la photo ne sont pas superposés
+
+Le survol filmé est une vue **oblique**, prise d'assez bas ; le schéma est une
+vue **en plan**. Poser l'un sur l'autre laisserait croire que les traits du
+schéma désignent ce qu'on voit sur la photographie — ce qui serait faux, les
+deux géométries ne se correspondent pas. Sur un travail de géographie, c'est
+une faute, pas un effet.
+
+Les deux sont donc **accouplés** : ils avancent ensemble, étape par étape. À
+gauche le plan, comment ça s'organise ; à droite le site réel, à quoi ça
+ressemble. La correspondance se fait par l'étape, pas par le pixel, et la
+figure le dit.
 
 ### Honnêteté des images
 

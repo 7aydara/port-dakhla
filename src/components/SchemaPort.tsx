@@ -54,6 +54,16 @@ const QUAIS = [
 const ZONE = 'M 772,168 L 980,150 L 980,648 L 790,636 Z';
 const ROUTE = 'M 876,158 L 884,74 L 930,0';
 
+/* Le fonctionnement du port, en trois mouvements. Ce ne sont pas des
+   ornements : ils repondent a « une fois construit, comment ca marche ». */
+const FLUX = [
+  // Chaque mouvement porte un simple numero : les libelles en toutes lettres
+  // debordaient du cadre. Le detail est dans la legende, ou il a la place.
+  { cle: 'entree', d: 'M 104,400 C 162,400 206,398 240,396 C 274,394 298,386 318,381', n: 1, x: 128, y: 400 },
+  { cle: 'viaduc', d: 'M 548,392 L 664,390', n: 2, x: 548, y: 392 },
+  { cle: 'terre', d: 'M 700,388 C 744,382 768,334 800,296 C 836,254 866,214 874,164 L 880,86 L 912,26', n: 3, x: 700, y: 388 },
+] as const;
+
 interface ProprietesSchema {
   /** Index de la premiere couche, si le schema ne commence pas a l'etape 0. */
   readonly decalage?: number;
@@ -88,10 +98,26 @@ export function SchemaPort({ decalage = 0 }: ProprietesSchema) {
           <pattern id="trame-remblai" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(38)">
             <line x1="0" y1="0" x2="0" y2="9" stroke="var(--carmin)" strokeWidth="2.6" opacity="0.55" />
           </pattern>
-          <pattern id="trame-zone" width="16" height="16" patternUnits="userSpaceOnUse">
-            <path d="M 0,16 L 16,0" stroke="var(--carmin)" strokeWidth="1.1" opacity="0.4" />
-            <path d="M 0,0 L 16,16" stroke="var(--carmin)" strokeWidth="1.1" opacity="0.2" />
+          {/* La zone industrielle est un amenagement a TERRE : trame froide,
+              pour ne pas la confondre avec les ouvrages maritimes, qui sont
+              les seuls en carmin. */}
+          <pattern id="trame-zone" width="18" height="18" patternUnits="userSpaceOnUse">
+            <path d="M 0,18 L 18,0" stroke="var(--trame)" strokeWidth="1.2" opacity="0.5" />
+            <path d="M 0,0 L 18,18" stroke="var(--trame)" strokeWidth="1.2" opacity="0.25" />
           </pattern>
+
+          {/* Pointe des fleches de fonctionnement. */}
+          <marker
+            id="pointe"
+            viewBox="0 0 10 10"
+            refX="8"
+            refY="5"
+            markerWidth="5"
+            markerHeight="5"
+            orient="auto-start-reverse"
+          >
+            <path d="M 0,0 L 10,5 L 0,10 z" fill="var(--or)" />
+          </marker>
         </defs>
 
         {/* ---- COUCHE 1 : le trait de cote et les isobathes ---------------- */}
@@ -193,6 +219,20 @@ export function SchemaPort({ decalage = 0 }: ProprietesSchema) {
           <text x={952} y={40} className="schema__etiquette schema__etiquette--terre" textAnchor="end">
             vers RN 1
           </text>
+        </g>
+
+        {/* ---- COUCHE 7 : le fonctionnement ------------------------------- */}
+        <g data-etat={couche(6)}>
+          {FLUX.map((f) => (
+            <g key={f.cle}>
+              <path d={f.d} className="schema__flux-ombre" />
+              <path d={f.d} className="schema__flux" markerEnd="url(#pointe)" />
+              <circle cx={f.x} cy={f.y} r="17" className="schema__flux-pastille" />
+              <text x={f.x} y={f.y + 7} className="schema__flux-numero" textAnchor="middle">
+                {f.n}
+              </text>
+            </g>
+          ))}
         </g>
 
         {/* ---- Rose des vents. Toujours visible : on lit une carte. -------- */}

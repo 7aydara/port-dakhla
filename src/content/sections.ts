@@ -149,6 +149,10 @@ export const SECTIONS: readonly Section[] = [
         par: 'fahd',
         note: "Enfin, en arrière du port, la zone industrielle et logistique : mille six cent cinquante hectares destinés à accueillir les entreprises. Sans elle, le port ne serait qu’un lieu de transit.",
       },
+      {
+        par: 'fahd',
+        note: "Une fois l’ensemble construit, voilà comment il fonctionne : les navires entrent par la passe, entre les deux digues ; ils déchargent aux quais du port-îlot ; le viaduc ramène tout à terre ; et la route rejoint la nationale 1. C’est cette chaîne complète qui fait la différence avec un simple point de débarquement.",
+      },
     ],
   },
   {

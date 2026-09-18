@@ -122,17 +122,17 @@ const nav = await chromium.launch(
   await p.waitForTimeout(300);
   const depart = await p.evaluate(() => document.querySelector('.releve__sonde').textContent);
   // Cinq appuis en rafale, sans aucune pause : on doit passer de 1/6 a 6/6.
-  for (let i = 0; i < 5; i++) await p.keyboard.press('ArrowRight', { delay: 0 });
+  for (let i = 0; i < 6; i++) await p.keyboard.press('ArrowRight', { delay: 0 });
   await p.waitForTimeout(250);
   const arrivee = await p.evaluate(() => document.querySelector('.releve__sonde').textContent.replace(/\s+/g,' ').trim());
-  ok(/6 \/ 6/.test(arrivee), `5 appuis en rafale -> etape 6/6 (obtenu « ${arrivee} », depart « ${depart.replace(/\s+/g,' ').trim()} »)`);
+  ok(/7 \/ 7/.test(arrivee), `6 appuis en rafale -> etape 7/7 (obtenu « ${arrivee} », depart « ${depart.replace(/\s+/g,' ').trim()} »)`);
 
   // Toutes les couches du schema doivent etre acquises, aucune en attente.
   const couches = await p.evaluate(() => {
     const g = [...document.querySelectorAll('.schema__svg > g[data-etat]')];
     return g.map((x) => x.dataset.etat);
   });
-  ok(!couches.includes('futur'), `les 6 couches du schema sont construites (${couches.join(',')})`);
+  ok(!couches.includes('futur'), `les 7 couches du schema sont construites (${couches.join(',')})`);
 
   /* ---- 3 bis. RATTRAPAGE INSTANTANE ---------------------------------- */
   await p.keyboard.press('Home');
@@ -157,12 +157,12 @@ const nav = await chromium.launch(
   // On repart d'un etat connu : section 03, derniere etape.
   await p.keyboard.press('4');
   await p.waitForTimeout(220);
-  for (let i = 0; i < 5; i++) await p.keyboard.press('ArrowRight', { delay: 0 });
+  for (let i = 0; i < 6; i++) await p.keyboard.press('ArrowRight', { delay: 0 });
   await p.waitForTimeout(220);
   await p.keyboard.press('ArrowLeft');
   await p.waitForTimeout(200);
   const retour = await p.evaluate(() => document.querySelector('.releve__sonde').textContent.replace(/\s+/g,' ').trim());
-  ok(/5 \/ 6/.test(retour), `fleche gauche revient a l'etape 5/6 (obtenu « ${retour} »)`);
+  ok(/6 \/ 7/.test(retour), `fleche gauche revient a l'etape 6/7 (obtenu « ${retour} »)`);
 
   /* ---- 5. SAUT DIRECT 1..9 ------------------------------------------- */
   await p.keyboard.press('8');
@@ -244,7 +244,7 @@ const nav = await chromium.launch(
   await p.keyboard.press('Space');
   await p.keyboard.press('4');
   await p.waitForTimeout(200);
-  for (let i = 0; i < 5; i++) { await p.keyboard.press('ArrowRight'); await p.waitForTimeout(40); }
+  for (let i = 0; i < 6; i++) { await p.keyboard.press('ArrowRight'); await p.waitForTimeout(40); }
   await p.waitForTimeout(120);
   const r = await p.evaluate(() => {
     const g = [...document.querySelectorAll('.schema__svg > g[data-etat]')];
@@ -255,7 +255,7 @@ const nav = await chromium.launch(
       dash: getComputedStyle(d).strokeDashoffset,
     };
   });
-  ok(!r.etats.includes('futur'), `reduced-motion : les 6 couches sont bien atteintes (${r.etats.join(',')})`);
+  ok(!r.etats.includes('futur'), `reduced-motion : les 7 couches sont bien atteintes (${r.etats.join(',')})`);
   ok(parseFloat(r.duree) <= 0.002, `reduced-motion : transitions neutralisees (${r.duree})`);
   ok(parseFloat(r.dash) === 0, `reduced-motion : le trace des digues est a son etat final (dashoffset ${r.dash})`);
   await ctx.close();
@@ -305,7 +305,7 @@ for (const vp of [{ width: 1024, height: 768 }, { width: 1920, height: 1080 }, {
   await p.keyboard.press('Space');
 
   const releves = new Set();
-  const etapes = [5, 5, 4, 6, 6, 12, 4, 5, 2];
+  const etapes = [5, 5, 4, 7, 6, 12, 4, 5, 2];
   for (let s = 0; s < 9; s++) {
     await p.keyboard.press(String(s + 1));
     await p.waitForTimeout(200);
@@ -536,7 +536,7 @@ for (const vp of [{ width: 1024, height: 768 }, { width: 1920, height: 1080 }, {
   await p.goto(BASE + '#/present', { waitUntil: 'load' });
   await p.waitForTimeout(1200);
   await p.keyboard.press('Space');
-  const etapes = [5, 5, 4, 6, 6, 12, 4, 5, 2];
+  const etapes = [5, 5, 4, 7, 6, 12, 4, 5, 2];
   for (let s = 0; s < 9; s++) {
     await p.keyboard.press(String(s + 1));
     await p.waitForTimeout(160);
