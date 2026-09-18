@@ -28,7 +28,7 @@
   border-right: 1px solid var(--encre-14);
   /* Aplat franc, pas de backdrop-filter : mesure faite, le flou d'arriere-plan
      sur cette colonne fixe faisait perdre 31 % des images pendant le scroll. */
-  background: var(--creme);
+  background: var(--papier);
   z-index: 40;
 }
 .releve__entete {
@@ -69,18 +69,18 @@
    corail si c'est la station courante. */
 .releve__pastille {
   width: 0.55rem; height: 0.55rem;
-  border: 1px solid var(--sonde);
+  border: 1px solid var(--trame);
   border-radius: 50%;
   transition: background-color 260ms ease, border-color 260ms ease;
 }
 .releve__station[data-station='acquise'] .releve__pastille {
-  background: var(--ocre);
-  border-color: var(--ocre);
+  background: var(--carmin);
+  border-color: var(--carmin);
 }
 .releve__station[aria-current='true'] .releve__pastille {
-  background: var(--corail);
-  border-color: var(--corail);
-  box-shadow: 0 0 0 3px var(--corail-18);
+  background: var(--or);
+  border-color: var(--or);
+  box-shadow: 0 0 0 3px var(--or-18);
 }
 .releve__touche {
   font-family: var(--cote);
@@ -91,8 +91,8 @@
   line-height: 1.5;
 }
 .releve__station[aria-current='true'] .releve__touche {
-  color: var(--ocre);
-  border-color: var(--ocre-20);
+  color: var(--carmin);
+  border-color: var(--carmin-20);
 }
 .releve__libelle {
   overflow: hidden;
@@ -113,7 +113,7 @@
   color: var(--encre-40);
   letter-spacing: 0.06em;
 }
-.releve__sonde b { color: var(--ocre); font-weight: 700; }
+.releve__sonde b { color: var(--carmin); font-weight: 700; }
 /* Jauge d'etapes de la section courante. */
 .jauge {
   height: 3px;
@@ -122,7 +122,7 @@
 }
 .jauge__remplissage {
   height: 100%;
-  background: var(--corail);
+  background: var(--or);
   transform-origin: left;
   transition: transform 420ms var(--e-etape);
 }
@@ -196,7 +196,7 @@
   font-size: 0.92rem;
   font-weight: 700;
   letter-spacing: 0.16em;
-  color: var(--sonde);
+  color: var(--trame);
 }
 .section__titre {
   font-size: clamp(2.1rem, 1rem + 3vw, 4.2rem);
@@ -232,7 +232,7 @@
      image ou sur un schéma clair, il faut qu'il se détache sans discussion. */
   background: #14323f;
   color: #fbf6ec;
-  border-top: 2px solid var(--ocre);
+  border-top: 2px solid var(--carmin);
   font-size: clamp(0.88rem, 0.7rem + 0.4vw, 1.05rem);
 }
 .notes__qui {
@@ -277,7 +277,7 @@
   z-index: 120;
   display: grid;
   place-items: center;
-  background: var(--creme);
+  background: var(--papier);
   padding: var(--marge);
 }
 .aide-clavier__grille {
@@ -299,7 +299,7 @@ kbd {
   font-family: var(--cote);
   font-size: 0.78rem;
   font-weight: 700;
-  color: var(--ocre);
+  color: var(--carmin);
   border: 1px solid var(--encre-14);
   border-bottom-width: 2px;
   padding: 0.12rem 0.42rem;

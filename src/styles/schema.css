@@ -21,7 +21,7 @@
   max-width: 100%;
   margin-inline: auto;
   border: 1px solid var(--encre-14);
-  background: var(--creme);
+  background: var(--papier);
   display: block;
 }
 
@@ -47,7 +47,7 @@
 
 /* --- La terre ------------------------------------------------------------ */
 .schema__terre {
-  fill: color-mix(in oklab, var(--ocre) 22%, #f3e8d4);
+  fill: #ece0ca;
   stroke: none;
   transition: fill-opacity var(--t-trace) var(--e-etape);
 }
@@ -55,7 +55,7 @@
 
 .schema__trait-cote {
   fill: none;
-  stroke: var(--ocre);
+  stroke: var(--carmin);
   stroke-width: 2.5;
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
@@ -66,7 +66,7 @@
 /* --- Les isobathes ------------------------------------------------------- */
 .schema__isobathe {
   fill: none;
-  stroke: var(--sonde);
+  stroke: var(--trame);
   stroke-width: 2;
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
@@ -96,7 +96,7 @@
   letter-spacing: 0.2em;
   fill: rgb(14 42 54 / 0.6);
 }
-.schema__toponyme--mer { font-style: italic; fill: var(--sonde); }
+.schema__toponyme--mer { font-style: italic; fill: var(--trame); }
 
 .schema__etiquette {
   font-family: var(--cote);
@@ -111,7 +111,7 @@
 /* --- Les digues : le trace le plus important du site --------------------- */
 .schema__digue {
   fill: none;
-  stroke: var(--ocre);
+  stroke: var(--carmin);
   stroke-width: 15;
   stroke-linecap: round;
   stroke-linejoin: round;
@@ -123,7 +123,7 @@
 
 .schema__passe {
   fill: none;
-  stroke: var(--corail);
+  stroke: var(--or);
   stroke-width: 3.5;
   stroke-dasharray: 0.06 0.05;
   opacity: 0.9;
@@ -152,7 +152,7 @@
 /* --- Le terre-plein et le port-ilot -------------------------------------- */
 .schema__ilot {
   fill: url(#trame-remblai);
-  stroke: var(--ocre);
+  stroke: var(--carmin);
   stroke-width: 5;
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
@@ -172,14 +172,14 @@
 }
 [data-etat='encours'] .schema__quai,
 [data-etat='acquis'] .schema__quai { stroke-dashoffset: 0; }
-.schema__quai--commerce { stroke: var(--corail); }
-.schema__quai--peche { stroke: var(--zayd); }
-.schema__quai--reparation { stroke: var(--rayan); }
+.schema__quai--commerce { stroke: var(--or); }
+.schema__quai--peche { stroke: var(--trame); }
+.schema__quai--reparation { stroke: var(--vert); }
 
 /* --- La zone industrielle et la route ------------------------------------ */
 .schema__zone {
   fill: url(#trame-zone);
-  stroke: var(--ocre);
+  stroke: var(--carmin);
   stroke-width: 1.8;
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
@@ -251,19 +251,19 @@
   align-items: start;
   border: 1px solid var(--encre-14);
   border-left-width: 2px;
-  border-left-color: var(--sonde);
+  border-left-color: var(--trame);
   padding: clamp(0.4rem, 1vh, 0.55rem) clamp(0.5rem, 1vw, 0.8rem);
-  background: var(--creme);
+  background: var(--papier);
 }
-.legende[data-etat='acquis'] { border-left-color: var(--ocre); }
+.legende[data-etat='acquis'] { border-left-color: var(--carmin); }
 .legende[data-etat='encours'] {
-  border-left-color: var(--corail);
+  border-left-color: var(--or);
   background: rgb(174 64 52 / 0.07);
 }
 .legende__pastille {
   width: 1.1rem; height: 0.36rem;
   margin-top: 0.42rem;
-  background: var(--teinte, var(--ocre));
+  background: var(--teinte, var(--carmin));
 }
 .legende__nom {
   font-family: var(--cote);

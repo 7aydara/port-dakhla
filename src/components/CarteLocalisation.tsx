@@ -13,7 +13,7 @@
 
 import { useState } from 'react';
 import { EmplacementMedia } from './EmplacementMedia';
-import { CADRAGES, MARQUEUR_SITE } from '../content/localisation';
+import { CADRAGES, MARQUEUR_DAKHLA, MARQUEUR_SITE } from '../content/localisation';
 
 interface ProprietesCarte {
   /** Index du cadrage courant (0 = Maroc, 1 = region, 2 = site). */
@@ -33,7 +33,7 @@ export function CarteLocalisation({ cadrage, marqueur }: ProprietesCarte) {
             repère reste visible mais discret, et c'est le schema de principe
             de la cote qui porte l'information. */}
         <EmplacementMedia
-          fichier="media/carte-maroc.jpg"
+          fichier="media/carte-maroc.webp"
           attendu="Carte du Maroc entier, nord en haut, façade atlantique bien dégagée. Largeur conseillée : 1600 px."
           ratio="21 / 6"
         />
@@ -58,29 +58,39 @@ export function CarteLocalisation({ cadrage, marqueur }: ProprietesCarte) {
           }}
         >
           <img
-            src={`${import.meta.env.BASE_URL}media/carte-maroc.jpg`}
-            alt="Carte du Maroc. La région de Dakhla-Oued Eddahab occupe l’extrême sud de la façade atlantique."
+            src={`${import.meta.env.BASE_URL}media/carte-maroc.webp`}
+            alt="Carte du Royaume du Maroc. La région de Dakhla-Oued Eddahab occupe l’extrême sud de la façade atlantique."
             className="carte__image"
             onError={() => setAbsente(true)}
           />
 
-          {/* Marqueur en coordonnees relatives : il suit la carte a tous les
-              niveaux de zoom, sans recalcul. */}
-          <svg
-            className="carte__marqueur"
-            viewBox="0 0 100 100"
-            preserveAspectRatio="none"
-            aria-hidden="true"
-            data-etat={marqueur ? 'encours' : 'futur'}
+          {/* Les reperes sont des elements HTML positionnes en pourcentages,
+              pas un SVG etire : un cercle dans un viewBox mis a l'echelle de
+              facon non uniforme devient une ellipse. Le contre-cadrage
+              scale(1/zoom) leur garde une taille constante a l'ecran quel que
+              soit le niveau de zoom. */}
+          <span
+            className="carte__repere carte__repere--ville"
+            style={{
+              left: `${MARQUEUR_DAKHLA.x}%`,
+              top: `${MARQUEUR_DAKHLA.y}%`,
+              ['--contre' as string]: String(1 / c.zoom),
+            }}
           >
-            <g
-              transform={`translate(${MARQUEUR_SITE.x} ${MARQUEUR_SITE.y})`}
-              vectorEffect="non-scaling-stroke"
-            >
-              <circle r="1.1" className="carte__point" />
-              <circle r="2.6" className="carte__halo" />
-            </g>
-          </svg>
+            <span className="carte__nom">Dakhla</span>
+          </span>
+
+          <span
+            className="carte__repere carte__repere--site"
+            data-etat={marqueur ? 'encours' : 'futur'}
+            style={{
+              left: `${MARQUEUR_SITE.x}%`,
+              top: `${MARQUEUR_SITE.y}%`,
+              ['--contre' as string]: String(1 / c.zoom),
+            }}
+          >
+            <span className="carte__nom carte__nom--site">Ntirift</span>
+          </span>
         </div>
       </div>
 

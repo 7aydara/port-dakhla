@@ -40,7 +40,7 @@ export const COUCHES: readonly Couche[] = [
     format: 'profondeur',
     millesime: 'études achevées à 60 % en 2018',
     note: 'Les isobathes relient les points de même profondeur. Tout le tracé du port découle de la position du −16 m.',
-    teinte: 'var(--sonde)',
+    teinte: 'var(--trame)',
   },
   {
     cle: 'digues',
@@ -49,7 +49,7 @@ export const COUCHES: readonly Couche[] = [
     unite: 'm',
     millesime: 'ouvrages de protection des bassins achevés en janvier 2026',
     note: 'Elles cassent la houle atlantique et créent le plan d’eau abrité. C’est le premier ouvrage construit.',
-    teinte: 'var(--ocre)',
+    teinte: 'var(--carmin)',
   },
   {
     cle: 'viaduc',
@@ -68,18 +68,18 @@ export const COUCHES: readonly Couche[] = [
     format: 'pourcentage',
     millesime: `remblai principal, ${AVANCEMENT_REMBLAI.date}`,
     note: 'La surface est gagnée sur la mer par remblai. C’est elle qui portera les quais et les terminaux.',
-    teinte: 'var(--ocre)',
+    teinte: 'var(--carmin)',
   },
   {
     cle: 'quais',
     nom: 'Les quais',
     millesime: 'trois usages, trois profondeurs',
     note: 'Chaque quai correspond à une composante du port : commerce, pêche, réparation navale.',
-    teinte: 'var(--corail)',
+    teinte: 'var(--or)',
     details: [
-      { nom: 'Commerce, −16 m', valeur: 660, unite: 'm', teinte: 'var(--corail)' },
-      { nom: 'Pêche, −12 m', valeur: 1800, unite: 'm', teinte: 'var(--zayd)' },
-      { nom: 'Réparation navale', valeur: 200, unite: 'm', teinte: 'var(--rayan)' },
+      { nom: 'Commerce, −16 m', valeur: 660, unite: 'm', teinte: 'var(--or)' },
+      { nom: 'Pêche, −12 m', valeur: 1800, unite: 'm', teinte: 'var(--trame)' },
+      { nom: 'Réparation navale', valeur: 200, unite: 'm', teinte: 'var(--vert)' },
       // Le dossier mentionne un poste petrolier sans lui donner de dimension.
       // On l'affiche donc SANS cote, plutot que de l'omettre ou de l'estimer.
       { nom: 'Poste pétrolier', note: POSTE_PETROLIER.note, teinte: 'var(--encre-40)' },
@@ -92,7 +92,7 @@ export const COUCHES: readonly Couche[] = [
     unite: 'ha',
     millesime: 'en arrière du port',
     note: 'Sans elle, le port ne serait qu’un lieu de transit. C’est ici que la valeur ajoutée doit rester dans la région.',
-    teinte: 'var(--ocre)',
+    teinte: 'var(--carmin)',
     details: [
       { nom: 'Route de raccordement à la RN 1', valeur: 7, unite: 'km', teinte: 'var(--encre-40)' },
     ],

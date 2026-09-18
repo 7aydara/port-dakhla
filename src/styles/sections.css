@@ -32,14 +32,14 @@ body.chargement-en-cours { overflow: hidden; }
   gap: 0.5rem;
   padding: 0.6rem 0.95rem;
   border: 1px solid var(--encre-14);
-  background: var(--creme);
+  background: var(--papier);
   font-family: var(--cote);
   font-size: 0.76rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
-.bouton-presentation:hover { border-color: var(--ocre); color: var(--ocre); }
+.bouton-presentation:hover { border-color: var(--carmin); color: var(--carmin); }
 
 /* ==========================================================================
    00 -- INTRO SCRUBEE
@@ -205,7 +205,7 @@ body.chargement-en-cours { overflow: hidden; }
   font-family: var(--cote);
   font-size: 0.78rem;
   font-weight: 700;
-  color: var(--sonde);
+  color: var(--trame);
 }
 .composante__corps { display: flex; flex-direction: column; gap: 0.45rem; min-width: 0; }
 .composante__nom { font-size: 1.02rem; font-weight: 700; line-height: 1.2; }
@@ -249,7 +249,7 @@ body.chargement-en-cours { overflow: hidden; }
 
 .localisation {
   display: grid;
-  grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+  grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
   gap: clamp(1rem, 2.5vw, 2.2rem);
   align-items: start;
 }
@@ -266,28 +266,80 @@ body.chargement-en-cours { overflow: hidden; }
 }
 
 .carte { margin: 0; display: flex; flex-direction: column; gap: 0.6rem; }
+/* Le cadre epouse EXACTEMENT le rapport de l'image de carte.
+   En « cover », l'image etait rognee verticalement : les pourcentages du
+   marqueur ne designaient plus le meme point que sur l'image d'origine --
+   une erreur de localisation d'une quarantaine de pixels, soit pres de
+   cent kilometres a cette echelle. Avec un cadre au meme rapport, la
+   correspondance est exacte, et la carte n'est pas rognee : on ne rogne
+   pas une carte. */
 .carte__hublot {
   position: relative;
   overflow: hidden;
   border: 1px solid var(--encre-14);
-  aspect-ratio: 4 / 3;
-  background: var(--sable);
+  /* La HAUTEUR commande et la largeur suit le rapport de l'image. Poser une
+     largeur de 100 % avec un plafond de hauteur violerait le rapport, l'image
+     se centrerait en « contain » et les pourcentages du marqueur seraient de
+     nouveau faux. `align-self` centre sans annuler l'etirement -- un
+     `margin-inline: auto` dans un conteneur flex effondre la boite a zero. */
+  height: min(58vh, 26vw);
+  aspect-ratio: 1150 / 1220;
+  width: auto;
+  align-self: center;
+  background: var(--papier);
 }
 .carte__mobile {
   position: absolute;
   inset: 0;
   transition: transform var(--t-camera) var(--e-etape);
 }
-.carte__image { width: 100%; height: 100%; object-fit: cover; display: block; }
-.carte__marqueur { position: absolute; inset: 0; width: 100%; height: 100%; }
-.carte__point { fill: var(--corail); }
-.carte__halo { fill: none; stroke: var(--corail); stroke-width: 0.5; opacity: 0.7; }
+.carte__image { width: 100%; height: 100%; object-fit: contain; display: block; }
+/* Reperes de la carte : elements HTML, taille constante a l'ecran grace au
+   contre-cadrage scale(1/zoom) -- un cercle SVG dans un viewBox etire
+   deviendrait une ellipse. */
+.carte__repere {
+  position: absolute;
+  transform: translate(-50%, -50%) scale(var(--contre, 1));
+  transform-origin: center;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  white-space: nowrap;
+  /* Les libelles partent vers l'ouest, c'est-a-dire vers l'ocean : a l'est
+     ils passeraient sur le territoire et deviendraient illisibles. */
+  flex-direction: row-reverse;
+  transition: transform var(--t-camera) var(--e-etape), opacity var(--t-revele) ease;
+}
+.carte__repere::before {
+  content: '';
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex: none;
+}
+.carte__repere--ville::before { background: var(--encre); }
+.carte__repere--site::before {
+  background: var(--or);
+  box-shadow: 0 0 0 4px rgb(125 95 8 / 0.25);
+}
+.carte__repere--site[data-etat='futur'] { opacity: 0; }
+.carte__nom {
+  font-family: var(--cote);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--encre);
+  text-shadow: 0 0 3px var(--papier), 0 0 3px var(--papier);
+}
+.carte__nom--site { color: var(--or); }
+.carte__repere--site .carte__nom { transform: translateY(-0.55rem); }
+.carte__repere--ville .carte__nom { transform: translateY(0.5rem); }
+
 .carte__legende { font-size: 0.82rem; color: var(--encre-62); }
 .carte__todo {
   display: block;
   font-family: var(--cote);
   font-size: 0.68rem;
-  color: var(--ocre);
+  color: var(--carmin);
   margin-top: 0.35rem;
 }
 .carte__note { font-size: 0.84rem; color: var(--encre-62); }
@@ -298,7 +350,7 @@ body.chargement-en-cours { overflow: hidden; }
   max-height: 28vh;
   display: grid;
   place-items: center;
-  border: 2px dashed var(--ocre-20);
+  border: 2px dashed var(--carmin-20);
   background: rgb(169 207 228 / 0.22);
   overflow: hidden;
 }
@@ -306,7 +358,7 @@ body.chargement-en-cours { overflow: hidden; }
   position: absolute;
   inset: 0;
   background-image:
-    repeating-linear-gradient(45deg, var(--ocre-20) 0 2px, transparent 2px 14px);
+    repeating-linear-gradient(45deg, var(--carmin-20) 0 2px, transparent 2px 14px);
   opacity: 0.5;
 }
 .emplacement__texte {
@@ -324,13 +376,13 @@ body.chargement-en-cours { overflow: hidden; }
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--ocre);
+  color: var(--carmin);
 }
 .emplacement__chemin {
   font-family: var(--cote);
   font-size: 0.86rem;
   color: var(--encre);
-  background: var(--sable);
+  background: var(--champ);
   border: 1px solid var(--encre-14);
   padding: 0.3rem 0.6rem;
 }
@@ -343,23 +395,23 @@ body.chargement-en-cours { overflow: hidden; }
   height: auto;
   max-height: 54vh;
   border: 1px solid var(--encre-14);
-  background: #b1d5e7; /* l'océan */
+  background: #bed2ea; /* l'océan */
 }
-.schema-cote__terre { fill: color-mix(in oklab, var(--ocre) 16%, #f6efe2); }
-.schema-cote__trait { fill: none; stroke: var(--ocre); stroke-width: 2; }
+.schema-cote__terre { fill: #ece0ca; }
+.schema-cote__trait { fill: none; stroke: var(--carmin); stroke-width: 2; }
 .schema-cote__mer {
   font-family: var(--cote); font-size: 14px; font-style: italic;
   fill: var(--encre-62); letter-spacing: 0.14em;
 }
 .schema-cote__nom { font-family: var(--cote); font-size: 14px; fill: var(--encre-62); }
 .schema-cote__nom--terre { fill: var(--encre); font-weight: 700; }
-.schema-cote__nom--site { fill: var(--corail); font-weight: 700; }
+.schema-cote__nom--site { fill: var(--or); font-weight: 700; }
 .schema-cote__ville { fill: var(--encre); }
-.schema-cote__site { fill: var(--corail); }
-.schema-cote__site-halo { fill: none; stroke: var(--corail); stroke-width: 1.5; opacity: 0.6; }
+.schema-cote__site { fill: var(--or); }
+.schema-cote__site-halo { fill: none; stroke: var(--or); stroke-width: 1.5; opacity: 0.6; }
 .schema-cote__cotation { stroke: var(--encre-40); stroke-width: 1.2; }
 .schema-cote__distance {
-  font-family: var(--cote); font-size: 15px; font-weight: 700; fill: var(--ocre);
+  font-family: var(--cote); font-size: 15px; font-weight: 700; fill: var(--carmin);
 }
 .schema-cote__distance--petit { font-size: 12px; font-weight: 400; fill: var(--encre-40); }
 .schema-cote__nord { fill: var(--encre-40); }
@@ -440,7 +492,7 @@ body.chargement-en-cours { overflow: hidden; }
 .frise__avancement {
   position: absolute;
   left: 0; top: 0; bottom: 0;
-  background: linear-gradient(to right, var(--sonde), var(--ocre));
+  background: linear-gradient(to right, var(--trame), var(--carmin));
   transition: width 900ms var(--e-etape);
 }
 .frise__point {
@@ -448,7 +500,7 @@ body.chargement-en-cours { overflow: hidden; }
   top: 50%;
   width: 7px; height: 7px;
   margin: -3.5px 0 0 -3.5px;
-  background: var(--ocre);
+  background: var(--carmin);
   border-radius: 50%;
 }
 /* Un seul pourcentage affiche : le dernier atteint. Il grimpe le long de
@@ -483,8 +535,8 @@ body.chargement-en-cours { overflow: hidden; }
   background: var(--encre-40);
   transition: background-color 300ms ease, height 300ms ease;
 }
-.frise__jalon[data-cle='true'] .frise__tige { height: 2rem; width: 2px; background: var(--ocre); }
-.frise__jalon[data-etat='encours'] .frise__tige { background: var(--corail); }
+.frise__jalon[data-cle='true'] .frise__tige { height: 2rem; width: 2px; background: var(--carmin); }
+.frise__jalon[data-etat='encours'] .frise__tige { background: var(--or); }
 .frise__jalon[data-etat='futur'] .frise__bouton { opacity: 0.22; }
 .frise__date {
   font-family: var(--cote);
@@ -515,20 +567,20 @@ body.chargement-en-cours { overflow: hidden; }
 }
 .jalon {
   border: 1px solid var(--encre-14);
-  border-top: 2px solid var(--sonde);
+  border-top: 2px solid var(--trame);
   padding: 0.7rem 0.9rem;
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
 }
-.jalon[data-cle='true'] { border-top-color: var(--ocre); }
+.jalon[data-cle='true'] { border-top-color: var(--carmin); }
 .jalon__date {
   font-family: var(--cote);
   font-size: 0.74rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--ocre);
+  color: var(--carmin);
 }
 .jalon__evenement { font-size: 0.86rem; line-height: 1.4; }
 .jalon__reserve { font-family: var(--cote); font-size: 0.68rem; color: var(--encre-40); }
@@ -558,7 +610,7 @@ body.chargement-en-cours { overflow: hidden; }
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--sonde);
+  color: var(--trame);
   border-bottom: 1px solid var(--encre-14);
   padding-bottom: 0.4rem;
 }
@@ -571,19 +623,19 @@ body.chargement-en-cours { overflow: hidden; }
   padding: 0.6rem 0;
   border-bottom: 1px solid var(--encre-08);
 }
-.objectif__rang { font-family: var(--cote); font-size: 0.8rem; font-weight: 700; color: var(--ocre); }
+.objectif__rang { font-family: var(--cote); font-size: 0.8rem; font-weight: 700; color: var(--carmin); }
 .objectif__titre { font-size: 0.95rem; font-weight: 700; line-height: 1.25; }
 .objectif__detail { font-size: 0.82rem; color: var(--encre-62); margin-top: 0.15rem; }
 
 .piliers { display: flex; flex-direction: column; gap: 0.7rem; }
 .pilier {
   border: 1px solid var(--encre-14);
-  border-left: 3px solid var(--teinte-pilier, var(--sonde));
+  border-left: 3px solid var(--teinte-pilier, var(--trame));
   padding: 0.7rem 0.9rem;
 }
-.pilier[data-pilier='social'] { --teinte-pilier: var(--zayd); }
-.pilier[data-pilier='economique'] { --teinte-pilier: var(--ocre); }
-.pilier[data-pilier='environnemental'] { --teinte-pilier: var(--corail); }
+.pilier[data-pilier='social'] { --teinte-pilier: var(--trame); }
+.pilier[data-pilier='economique'] { --teinte-pilier: var(--or); }
+.pilier[data-pilier='environnemental'] { --teinte-pilier: var(--carmin); }
 
 .pilier__entete {
   display: grid;
@@ -626,7 +678,7 @@ body.chargement-en-cours { overflow: hidden; }
   margin-top: 0.15rem;
 }
 .enjeux__lecture {
-  border-left: 2px solid var(--corail);
+  border-left: 2px solid var(--or);
   padding-left: 0.8rem;
   font-size: 0.92rem;
 }
@@ -644,7 +696,7 @@ body.chargement-en-cours { overflow: hidden; }
   max-height: 58vh;
   touch-action: none;
   cursor: ew-resize;
-  background: var(--sable);
+  background: var(--champ);
 }
 .comparateur__image {
   position: absolute;
@@ -663,13 +715,13 @@ body.chargement-en-cours { overflow: hidden; }
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  background: var(--creme);
+  background: var(--papier);
   border: 1px solid var(--encre-14);
   padding: 0.3rem 0.6rem;
   pointer-events: none;
 }
 .comparateur__etiquette--gauche { left: 0.7rem; color: var(--encre-62); }
-.comparateur__etiquette--droite { right: 0.7rem; color: var(--ocre); }
+.comparateur__etiquette--droite { right: 0.7rem; color: var(--carmin); }
 
 .comparateur__poignee {
   position: absolute;
@@ -684,7 +736,7 @@ body.chargement-en-cours { overflow: hidden; }
   position: absolute;
   top: 0; bottom: 0;
   width: 2px;
-  background: var(--creme);
+  background: var(--papier);
   box-shadow: 0 0 0 1px rgb(20 50 63 / 0.45);
 }
 .comparateur__prise {
@@ -692,12 +744,12 @@ body.chargement-en-cours { overflow: hidden; }
   display: grid;
   place-items: center;
   width: 2.6rem; height: 2.6rem;
-  background: var(--creme);
+  background: var(--papier);
   color: var(--encre);
   border-radius: 50%;
   box-shadow: 0 1px 6px rgb(20 50 63 / 0.3);
 }
-.comparateur__poignee:focus-visible { outline: 3px solid var(--corail); outline-offset: 2px; }
+.comparateur__poignee:focus-visible { outline: 3px solid var(--or); outline-offset: 2px; }
 .comparateur__mode-emploi { font-size: 0.8rem; color: var(--encre-62); }
 
 .avant-apres__lecture {
@@ -715,7 +767,7 @@ body.chargement-en-cours { overflow: hidden; }
   font-weight: 700;
   line-height: 1.25;
   max-width: 26ch;
-  border-left: 3px solid var(--corail);
+  border-left: 3px solid var(--or);
   padding-left: clamp(0.8rem, 1.6vw, 1.4rem);
 }
 
@@ -735,8 +787,8 @@ body.chargement-en-cours { overflow: hidden; }
   border-bottom: 1px solid var(--encre-14);
   padding-bottom: 0.4rem;
 }
-.balance__plateau[data-sens='pour'] .balance__titre { color: var(--ocre); }
-.balance__plateau[data-sens='limite'] .balance__titre { color: var(--corail); }
+.balance__plateau[data-sens='pour'] .balance__titre { color: var(--carmin); }
+.balance__plateau[data-sens='limite'] .balance__titre { color: var(--or); }
 
 .argument {
   border-left: 2px solid var(--encre-14);
@@ -745,8 +797,8 @@ body.chargement-en-cours { overflow: hidden; }
   flex-direction: column;
   gap: 0.3rem;
 }
-.balance__plateau[data-sens='pour'] .argument { border-left-color: var(--ocre); }
-.balance__plateau[data-sens='limite'] .argument { border-left-color: var(--corail); }
+.balance__plateau[data-sens='pour'] .argument { border-left-color: var(--carmin); }
+.balance__plateau[data-sens='limite'] .argument { border-left-color: var(--or); }
 .argument__par {
   font-family: var(--cote);
   font-size: 0.68rem;
@@ -778,7 +830,7 @@ body.chargement-en-cours { overflow: hidden; }
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--ocre);
+  color: var(--carmin);
 }
 .source__date { color: var(--encre-40); font-weight: 400; }
 .source__lien { display: inline-block; margin-top: 0.15rem; font-size: 0.92rem; }
@@ -834,7 +886,7 @@ body.chargement-en-cours { overflow: hidden; }
   margin-top: 1.4rem;
   font-family: var(--cote);
   font-size: 0.8rem;
-  color: var(--ocre);
+  color: var(--carmin);
   letter-spacing: 0.08em;
 }
 
@@ -842,7 +894,7 @@ body.chargement-en-cours { overflow: hidden; }
 .legende__reserve {
   font-family: var(--cote);
   font-size: 0.62rem;
-  color: var(--ocre);
+  color: var(--carmin);
   line-height: 1.35;
 }
 
@@ -854,7 +906,7 @@ body.chargement-en-cours { overflow: hidden; }
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--sonde);
+  color: var(--trame);
 }
 .trafic__liste { display: flex; flex-direction: column; gap: 0.45rem; }
 .trafic__liste li { display: flex; flex-direction: column; }
@@ -870,3 +922,6 @@ body.chargement-en-cours { overflow: hidden; }
   color: var(--encre-40);
   letter-spacing: 0.06em;
 }
+
+/* La ville de Dakhla sur la carte : un point sobre, en repere du site. */
+.carte__ville { fill: var(--encre); }

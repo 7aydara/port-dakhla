@@ -64,6 +64,13 @@ export const SOURCES: readonly Source[] = [
     url: 'https://snrtnews.com/fr/article/construction-du-port-de-dakhla-atlantique-digues-quais-et-hydrogene-vert-pour-un-hub',
   },
   {
+    id: 'carte-maroc24',
+    organe: 'Maroc24',
+    date: 'fond de carte',
+    titre: 'Carte du Royaume du Maroc — fond de carte utilisé en section 02',
+    url: 'https://maroc24.com',
+  },
+  {
     id: 'tme',
     organe: 'TME Ingénierie',
     date: 'fiche projet',

@@ -35,7 +35,7 @@ ul, ol { padding: 0; list-style: none; }
   font-variant-numeric: tabular-nums slashed-zero;
   font-feature-settings: 'tnum' 1, 'zero' 1;
   letter-spacing: -0.01em;
-  color: var(--ocre);
+  color: var(--carmin);
   font-weight: 500;
 }
 .cote--geant {
@@ -77,13 +77,13 @@ ul, ol { padding: 0; list-style: none; }
 .cartouche {
   position: relative;
   border: 1px solid var(--encre-14);
-  border-left: 2px solid var(--sonde);
-  background: var(--creme);
+  border-left: 2px solid var(--trame);
+  background: var(--papier);
   padding: clamp(0.8rem, 1.6vw, 1.3rem) clamp(1rem, 1.9vw, 1.5rem);
 }
-.cartouche--acquis { border-left-color: var(--ocre); }
+.cartouche--acquis { border-left-color: var(--carmin); }
 .cartouche--encours {
-  border-left-color: var(--corail);
+  border-left-color: var(--or);
   background: rgb(174 64 52 / 0.07);
 }
 .cartouche__titre {
@@ -141,18 +141,18 @@ ul, ol { padding: 0; list-style: none; }
    -------------------------------------------------------------------------- */
 :focus { outline: none; }
 :focus-visible {
-  outline: 3px solid var(--corail);
+  outline: 3px solid var(--or);
   outline-offset: 3px;
   border-radius: 1px;
 }
 
 a {
   color: var(--encre);
-  text-decoration-color: var(--sonde);
+  text-decoration-color: var(--trame);
   text-underline-offset: 0.22em;
   text-decoration-thickness: 1px;
 }
-a:hover { text-decoration-color: var(--ocre); }
+a:hover { text-decoration-color: var(--carmin); }
 
 /* Lien d'evitement : premiere tabulation de la page. */
 .evitement {
@@ -160,8 +160,8 @@ a:hover { text-decoration-color: var(--ocre); }
   left: -9999px;
   top: 0;
   z-index: 200;
-  background: var(--ocre);
-  color: var(--sable);
+  background: var(--carmin);
+  color: var(--champ);
   padding: 0.7rem 1.1rem;
   font-weight: 700;
 }

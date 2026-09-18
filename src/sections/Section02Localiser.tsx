@@ -9,7 +9,7 @@ import { EnteteSection } from '../components/CadreSection';
 import { CarteLocalisation } from '../components/CarteLocalisation';
 import { SchemaCote } from '../components/SchemaCote';
 import { Cote } from '../components/Cote';
-import { useEtape, etatCouche } from '../hooks/usePresentation';
+import { useEtape, etatCouche, usePresentation } from '../hooks/usePresentation';
 import { PROJET } from '../content/projet';
 import { RESERVE_COMMUNE } from '../content/localisation';
 
@@ -17,6 +17,10 @@ const INDEX = 2;
 
 export function Section02Localiser() {
   const etape = useEtape();
+  const { etat } = usePresentation();
+  // En recit, on montre le pays entier : le recadrage progressif est une
+  // figure de presentation, pas de lecture.
+  const recit = etat.mode === 'recit';
   const couche = (n: number) => etatCouche(n, etape);
 
   return (
@@ -25,7 +29,7 @@ export function Section02Localiser() {
 
       <div className="corps">
         <div className="localisation">
-          <CarteLocalisation cadrage={Math.min(etape, 2)} marqueur={etape >= 2} />
+          <CarteLocalisation cadrage={recit ? 0 : Math.min(etape, 2)} marqueur={recit || etape >= 2} />
 
           <div className="localisation__colonne">
             <SchemaCote marqueur={etape >= 2} />

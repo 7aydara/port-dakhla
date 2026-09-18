@@ -44,7 +44,7 @@ const nav = await chromium.launch(
   }
   // Les variables posees depuis le JS ou en style inline ne sont pas declarees
   // en CSS : on les autorise explicitement.
-  const horsCss = new Set(['--presentateur', '--teinte']);
+  const horsCss = new Set(['--presentateur', '--teinte', '--contre']);
   const mortes = [...utilises].filter(([v]) => !definis.has(v) && !horsCss.has(v));
 
   ok(

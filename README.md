@@ -117,34 +117,39 @@ trois passages, parce qu'un seul varie trop pour être un test.
 
 ## La palette
 
-Beige et bleu ciel pastel. Les pastels sont dans les **fonds** et les
-remplissages ; le texte et les accents sont des versions **profondes** des
-mêmes teintes. C'est ce qui rend une palette pastel lisible : sans ça, du
-pastel sur du pastel devient illisible au fond d'une salle de classe.
+Elle n'est pas choisie sur un moodboard : elle est **prélevée dans la carte
+officielle du Royaume** utilisée en section 02. Les trois couleurs dominantes
+de ce fond de carte sont reprises telles quelles, et le reste en découle. Le
+site et la carte appartiennent ainsi au même monde — celui de la cartographie
+institutionnelle marocaine — au lieu de se juxtaposer.
 
-| Jeton | Hex | Rôle | Contraste sur le beige |
+| Jeton | Hex | Rôle | Contraste sur le champ |
 |---|---|---|---|
-| `--sable` | `#F0E6D4` | fond de page | — |
-| `--creme` | `#FBF6EC` | surfaces surélevées | — |
-| `--ciel` | `#A9CFE4` | bleu ciel pastel, bandes de profondeur | — |
-| `--sonde` | `#2F6E8A` | isobathes, filets, **et les chiffres** | 4,57:1 |
-| `--encre` | `#14323F` | tout le texte | **10,90:1** |
-| `--ocre` | `#8F4A1A` | ouvrages construits : digues, terre-plein | 5,37:1 |
-| `--corail` | `#AE4034` | étape en cours et focus clavier, ~2 % de la surface | 4,74:1 |
+| `--champ` | `#E6ECF7` | fond de page (le bleu du panneau de la carte) | — |
+| `--papier` | `#F7F9FD` | surfaces surélevées | — |
+| `--azur` | `#B3C9E8` | bandes de profondeur | — |
+| `--trame` | `#2C4770` | isobathes, filets, graduations | 7,90:1 |
+| `--encre` | `#0F2038` | tout le texte | **13,79:1** |
+| `--carmin` | `#BC0A22` | **le carmin exact de la carte**, prélevé au pixel : les ouvrages construits et les chiffres clés | 5,52:1 |
+| `--or` | `#7D5F08` | l'or de l'écusson, assombri. Étape en cours et focus clavier | 5,04:1 |
+| `--vert` | `#1A6B5A` | troisième teinte de graphique (les trois quais) | 5,02:1 |
+
+Le carmin est la couleur du territoire sur la carte ; ici, celle de ce que le
+pays y construit.
+
+La borne basse du dégradé de fond est calée sur le contraste, pas sur le goût :
+plus soutenue, le carmin y passait sous 4,5:1 pour du texte courant.
 
 Deux exceptions au fond clair, toutes deux justifiées : le **panneau de notes**
 reste sombre pour se détacher quel que soit ce qu'il recouvre, et le **titre de
-l'intro** est en clair parce qu'il est posé sur une photographie, pas sur le
-beige.
+l'intro** est en clair parce qu'il est posé sur une photographie.
 
 La touche <kbd>C</kbd> ne fonctionne pas comme un thème sombre : sur fond clair,
 renforcer le contraste veut dire **éclaircir le fond et approfondir l'encre**.
 
 Deux contrôles automatisés protègent cette palette : le calcul de contraste
 WCAG sur chaque nœud de texte, et une vérification statique qu'aucun `var(--x)`
-ne pointe vers un jeton inexistant — une couleur qui disparaît silencieusement
-ne casse rien de visible, et c'est précisément ce qui est arrivé pendant le
-passage au pastel.
+ne pointe vers un jeton inexistant.
 
 ---
 

@@ -1,97 +1,103 @@
 /* ==========================================================================
-   JETONS DE DESIGN — palette claire, beige et bleu ciel pastel.
+   JETONS DE DESIGN
 
-   Les pastels sont dans les FONDS et les remplissages ; le texte et les
-   accents, eux, sont des versions profondes des mêmes teintes. C'est ce qui
-   rend une palette pastel lisible : sans ça, du pastel sur du pastel devient
-   illisible au fond d'une salle de classe.
+   La palette n'est pas choisie sur un moodboard : elle est PRELEVEE dans la
+   carte officielle du Royaume fournie pour la section 02. Les trois couleurs
+   dominantes de ce fond de carte sont reprises telles quelles, et le reste en
+   decoule. Le site et la carte appartiennent ainsi au meme monde -- celui de
+   la cartographie institutionnelle marocaine -- au lieu de se juxtaposer.
 
-   Chaque couleur de texte a été vérifiée par le calcul de contraste WCAG
-   contre les trois fonds du site. Les ratios sont notés en commentaire.
+   Chaque couleur de texte est verifiee par le calcul de contraste WCAG contre
+   les deux fonds du site. Les ratios sont notes en commentaire.
    ========================================================================== */
 
 :root {
-  /* --- Les fonds. Beige chaud en surface, bleu ciel pastel en profondeur. */
-  --sable: #efe2cc; /* fond de page. Sable des dunes, éclairci.              */
-  --creme: #fdfaf4; /* surfaces surélevées : cartouches, panneaux.           */
-  --ciel:  #93c2de; /* bleu ciel pastel. Remplissages, bandes de profondeur. */
+  /* --- Les fonds, preleves sur la carte. */
+  --champ:  #e6ecf7; /* #E5EEFD sur la carte : le bleu du panneau. Fond de page. */
+  --papier: #f7f9fd; /* #F7FAFF sur la carte : les surfaces surelevees.          */
+  --azur:   #b3c9e8; /* bleu pale de remplissage : bandes de profondeur.         */
 
-  /* --- Les traits et les chiffres. */
-  --sonde: #215d77; /* 5,67:1 sur sable — isobathes, filets, ET les chiffres.
-                       Un bleu de carte marine, assez foncé pour du texte.    */
+  /* --- Les traits et les chiffres secondaires. */
+  --trame: #2c4770; /* 7,90:1 sur le champ — isobathes, filets, graduations.    */
 
   /* --- Le texte. */
-  --encre: #0e2a36; /* 11,70:1 sur sable, 14,37:1 sur crème. Tout le texte. */
+  --encre: #0f2038; /* 13,79:1 sur le champ, 15,52:1 sur le papier.             */
 
   /* --- Les deux accents. */
-  --ocre:   #8a4416; /* 5,37:1 — les ouvrages construits : digues, terre-plein,
-                        enrochements. La couleur de ce qui est gagné sur la mer. */
-  --corail: #a63527; /* 4,74:1 — RÉSERVÉ à l'étape en cours et au focus clavier.
-                        Environ 2 % de la surface, jamais plus.               */
+  --carmin: #bc0a22; /* 5,52:1 — LE carmin de la carte, prelevé au pixel. Les
+                        ouvrages construits et les chiffres cles. C'est la
+                        couleur du territoire sur la carte : ici, celle de ce
+                        que le pays y construit.                                */
+  --or:     #7d5f08; /* 5,04:1 — l'or de l'écusson, assombri pour porter du
+                        texte. RESERVE a l'etape en cours et au focus clavier.  */
+  --vert:   #1a6b5a; /* 5,02:1 — troisieme teinte de graphique, pour distinguer
+                        les trois quais sans reemployer un accent.              */
 
-  /* --- Dérivés : des transparences d'encre, pas de nouvelles couleurs. */
-  --encre-62: rgb(14 42 54 / 0.76);
-  --encre-40: rgb(14 42 54 / 0.58);
-  --encre-14: rgb(14 42 54 / 0.22);
-  --encre-08: rgb(14 42 54 / 0.12);
-  --ocre-20:   rgb(143 74 26 / 0.22);
-  --corail-18: rgb(174 64 52 / 0.12);
+  /* --- Derives : des transparences d'encre, pas de nouvelles couleurs. */
+  --encre-62: rgb(15 32 56 / 0.74);
+  --encre-40: rgb(15 32 56 / 0.56);
+  --encre-14: rgb(15 32 56 / 0.20);
+  --encre-08: rgb(15 32 56 / 0.11);
+  --carmin-20: rgb(188 10 34 / 0.18);
+  --or-18: rgb(125 95 8 / 0.14);
 
-  /* --- Fond de section : on descend, le beige de surface vire au bleu ciel
-         de profondeur. Piloté par --profondeur (0 à 1) depuis le JS.         */
+  /* --- Fond de section : on descend, le bleu du champ se fonce d'un cran par
+         section. Pilote par --profondeur (0 a 1) depuis le JS.                 */
   --profondeur: 0;
-  --fond: color-mix(in oklab, var(--sable) calc((1 - var(--profondeur)) * 100%), #dceef6);
+  /* La borne basse est calee sur le contraste, pas sur le gout : plus
+     soutenue, le carmin y passait sous 4,5:1 pour du texte courant. */
+  --fond: color-mix(in oklab, var(--champ) calc((1 - var(--profondeur)) * 100%), #dbe3f0);
 
   /* --- Typographie. Deux familles, toutes deux locales. */
   --texte: 'Libre Franklin', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --cote: 'Iosevka', ui-monospace, 'SF Mono', 'Cascadia Mono', Consolas, monospace;
 
-  /* --- Rythme. Calé sur 1024x768 comme sur 1920x1080. */
+  /* --- Rythme. Cale sur 1024x768 comme sur 1920x1080. */
   --colonne-releve: clamp(9rem, 13vw, 14rem);
   --marge: clamp(1.25rem, 3.2vw, 3.5rem);
-  /* Trois durees, trois usages. Un seul 1,4 s pour tout rendait l'ensemble
-     poussif : un bloc de texte qui met une seconde et demie a apparaitre
-     donne l'impression que le site rame, alors qu'il attend. */
-  --t-revele: 0.42s;  /* un bloc, un chiffre, une carte qui apparait          */
-  --t-trace: 1.2s;    /* le dessin des ouvrages du schema -- doit etre suivi
-                         a l'oral pendant que le presentateur parle           */
-  --t-camera: 0.85s;  /* un mouvement de cadrage : recadrage de carte, scrub  */
+
+  /* --- Trois durees, trois usages. */
+  --t-revele: 0.42s;
+  --t-trace: 1.2s;
+  --t-camera: 0.85s;
   --e-etape: cubic-bezier(0.22, 0.61, 0.36, 1);
 
-  /* --- Couleurs des trois présentateurs. Toutes trois ≥ 5:1 sur le beige. */
-  --zayd:  #1f6688;
-  --fahd:  var(--ocre);
-  --rayan: #6a5495;
+  /* --- Couleurs des trois presentateurs. Elles n'apparaissent QUE dans le
+         panneau de notes : le nom de qui lit quoi ne se met pas a l'ecran. */
+  --zayd:  #7fb0e8;
+  --fahd:  #e8a0a8;
+  --rayan: #8fd3bd;
 }
 
 /* --------------------------------------------------------------------------
    MODE FORT CONTRASTE (touche C)
-   Sur fond clair, renforcer le contraste veut dire ÉCLAIRCIR le fond et
-   APPROFONDIR l'encre — l'inverse d'un thème sombre. Assurance matérielle
-   pour une salle très éclairée ou un vidéoprojecteur délavé.
+   Sur fond clair, renforcer le contraste veut dire ECLAIRCIR le fond et
+   APPROFONDIR l'encre. Assurance materielle pour une salle tres eclairee ou
+   un videoprojecteur delave.
    -------------------------------------------------------------------------- */
 :root[data-contraste='fort'] {
-  --sable: #fffdf7;
-  --creme: #ffffff;
-  --ciel: #8cbfda;
-  --sonde: #1d5570;
-  --encre: #071a23;
-  --ocre: #71380f;
-  --corail: #96281c;
-  --encre-62: rgb(7 26 35 / 0.85);
-  --encre-40: rgb(7 26 35 / 0.68);
-  --encre-14: rgb(7 26 35 / 0.3);
-  --encre-08: rgb(7 26 35 / 0.18);
+  --champ: #fbfcff;
+  --papier: #ffffff;
+  --azur: #9bb8dd;
+  --trame: #1d3459;
+  --encre: #04101f;
+  --carmin: #9c0519;
+  --or: #5f4804;
+  --vert: #0f5142;
+  --encre-62: rgb(4 16 31 / 0.84);
+  --encre-40: rgb(4 16 31 / 0.66);
+  --encre-14: rgb(4 16 31 / 0.3);
+  --encre-08: rgb(4 16 31 / 0.18);
 }
 
 @theme inline {
-  --color-sable: var(--sable);
-  --color-creme: var(--creme);
-  --color-ciel: var(--ciel);
-  --color-sonde: var(--sonde);
+  --color-champ: var(--champ);
+  --color-papier: var(--papier);
+  --color-azur: var(--azur);
+  --color-trame: var(--trame);
   --color-encre: var(--encre);
-  --color-ocre: var(--ocre);
-  --color-corail: var(--corail);
+  --color-carmin: var(--carmin);
+  --color-or: var(--or);
   --font-texte: var(--texte);
   --font-cote: var(--cote);
 }
