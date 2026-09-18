@@ -150,13 +150,18 @@ passage au pastel.
 
 ## Déploiement
 
-Le dépôt contient un `netlify.toml` : Netlify n'a rien à deviner.
+Le dépôt contient un `vercel.json` **et** un `netlify.toml` : ni l'un ni l'autre
+hébergeur n'a quoi que ce soit à deviner. Les deux disent la même chose.
 
 | Réglage | Valeur |
 |---|---|
 | Build command | `npm run build` |
-| Publish directory | `dist` |
-| Node version | 22 |
+| Output / publish directory | `dist` |
+| Install command | `npm ci` |
+| Node | 22 (`engines` dans `package.json`, lu par Vercel) |
+
+Les deux fichiers posent aussi les en-têtes de cache : le site pèse 6,7 Mo,
+dont l'essentiel en séquence d'images. Sans eux, chaque visite les retélécharge.
 
 **Le piège à éviter.** Ce qu'il faut publier, c'est `dist/`, jamais la racine
 du dépôt. La racine contient un `index.html` de développement qui pointe sur
@@ -165,11 +170,12 @@ page reste **blanche**, sans message d'erreur. C'est le symptôme d'un
 hébergeur qui sert le dépôt au lieu de le construire.
 
 Si le site est déjà déployé avec de mauvais réglages, les modifier dans
-l'interface ne suffit pas : il faut relancer un déploiement (*Trigger deploy →
-Clear cache and deploy site*).
+l'interface ne suffit pas : il faut relancer un déploiement. Sur Netlify,
+*Trigger deploy → Clear cache and deploy site* ; sur Vercel, *Deployments → …
+→ Redeploy*, sans cocher « Use existing Build Cache ».
 
-**Sans passer par git** : `npm run build`, puis glisser le dossier `dist/`
-(son contenu, pas le dossier parent) sur app.netlify.com/drop.
+**Sans passer par git** : `npm run build`, puis glisser le contenu de `dist/`
+sur app.netlify.com/drop, ou `npx vercel deploy --prebuilt` côté Vercel.
 
 Aucune redirection attrape-tout n'est configurée, et c'est volontaire : le
 site n'a qu'une seule URL — la navigation se fait par fragment (`#/present`),
