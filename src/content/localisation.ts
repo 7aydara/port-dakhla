@@ -34,6 +34,29 @@ export const MARQUEUR_SITE = {
 /** Position relative de la ville de Dakhla, pour situer le site par rapport a elle. */
 export const MARQUEUR_DAKHLA = { x: 13.83, y: 75.08 } as const;
 
+/**
+ * Reperes sur la carte REGIONALE (media/carte-region.webp), en pourcentages.
+ * Releves au pixel sur la carte d'origine, ou N'Tireft et Dakhla sont toutes
+ * deux nommees, puis convertis au cadrage exporte.
+ */
+export const MARQUEURS_REGION = {
+  ntireft: { x: 47.64, y: 21.81 },
+  dakhla: { x: 25.09, y: 53.98 },
+} as const;
+
+/**
+ * Echelle de cette carte. La distance Dakhla / N'Tireft mesure 366 px sur la
+ * carte d'origine ; le dossier la donne pour 40 km, soit 110 m par pixel.
+ * VERIFICATION CROISEE : a cette echelle, la presqu'ile de Dakhla mesure une
+ * trentaine de kilometres, ce qui correspond a sa longueur reelle. Le chiffre
+ * du dossier tient.
+ */
+export const ECHELLE_REGION = {
+  metresParPixel: 110,
+  /** Largeur d'une regle de 10 km, en pourcentage de la largeur de l'image. */
+  dixKmEnPourcent: 8.28,
+} as const;
+
 export const CADRAGES: readonly Cadrage[] = [
   { zoom: 1, origineX: 50, origineY: 50, libelle: 'Le Maroc et sa façade atlantique.' },
   {
@@ -59,5 +82,12 @@ export const CADRAGES: readonly Cadrage[] = [
  * peuvent se concilier si la commune s'etend vers le nord ; la verification
  * n'appartient pas au code, elle est signalee, pas tranchee.
  */
+/**
+ * Reserve de geographie, que la carte regionale rend maintenant VISIBLE :
+ * El Argoub (العرݣوب) y figure au sud-est de Dakhla, de l'autre cote de la
+ * baie, alors que le site est au nord. Les deux enonces du dossier peuvent se
+ * concilier si la commune s'etend vers le nord, mais le point merite d'etre
+ * signale plutot que tranche.
+ */
 export const RESERVE_COMMUNE =
-  'Le dossier situe le site dans la commune rurale d’El Argoub et à 40 km au nord de Dakhla. Le repère est porté ici selon la règle « 40 km au nord, côte ouverte, hors baie ».';
+  'Le dossier situe le site dans la commune rurale d’El Argoub — visible au sud-est de Dakhla sur la carte — et à 40 km au nord de la ville. Le port est bien au nord, à N’Tireft ; le rattachement communal reste à vérifier.';

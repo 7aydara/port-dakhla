@@ -389,34 +389,6 @@ body.chargement-en-cours { overflow: hidden; }
 .emplacement__attendu { font-size: 0.8rem; color: var(--encre-62); max-width: 42ch; }
 
 /* Schema de principe de la cote. */
-.schema-cote { margin: 0; display: flex; flex-direction: column; gap: 0.5rem; }
-.schema-cote__svg {
-  width: 100%;
-  height: auto;
-  max-height: 54vh;
-  border: 1px solid var(--encre-14);
-  background: #bed2ea; /* l'océan */
-}
-.schema-cote__terre { fill: #ece0ca; }
-.schema-cote__trait { fill: none; stroke: var(--carmin); stroke-width: 2; }
-.schema-cote__mer {
-  font-family: var(--cote); font-size: 14px; font-style: italic;
-  fill: var(--encre-62); letter-spacing: 0.14em;
-}
-.schema-cote__nom { font-family: var(--cote); font-size: 14px; fill: var(--encre-62); }
-.schema-cote__nom--terre { fill: var(--encre); font-weight: 700; }
-.schema-cote__nom--site { fill: var(--or); font-weight: 700; }
-.schema-cote__ville { fill: var(--encre); }
-.schema-cote__site { fill: var(--or); }
-.schema-cote__site-halo { fill: none; stroke: var(--or); stroke-width: 1.5; opacity: 0.6; }
-.schema-cote__cotation { stroke: var(--encre-40); stroke-width: 1.2; }
-.schema-cote__distance {
-  font-family: var(--cote); font-size: 15px; font-weight: 700; fill: var(--carmin);
-}
-.schema-cote__distance--petit { font-size: 12px; font-weight: 400; fill: var(--encre-40); }
-.schema-cote__nord { fill: var(--encre-40); }
-.schema-cote__nord-lettre { font-family: var(--cote); font-size: 15px; font-weight: 700; fill: var(--encre); }
-
 .fiche { display: flex; flex-direction: column; gap: 1px; background: var(--encre-14); border: 1px solid var(--encre-14); }
 .fiche__ligne {
   display: grid;
@@ -925,3 +897,114 @@ body.chargement-en-cours { overflow: hidden; }
 
 /* La ville de Dakhla sur la carte : un point sobre, en repere du site. */
 .carte__ville { fill: var(--encre); }
+
+/* ==========================================================================
+   LA CARTE DE LA REGION (section 02)
+   Carte reelle, qui a remplace le schema trace a la main : celui-ci approchait
+   la relation spatiale, celle-ci la montre.
+   ========================================================================== */
+.region { margin: 0; display: flex; flex-direction: column; gap: 0.45rem; }
+/* La hauteur commande, la largeur suit le rapport exact de l'image : sinon
+   les pourcentages des reperes ne designeraient plus le meme point. */
+.region__cadre {
+  position: relative;
+  border: 1px solid var(--encre-14);
+  background: var(--papier);
+  overflow: hidden;
+  line-height: 0;
+  height: min(52vh, 31vw);
+  aspect-ratio: 1100 / 830;
+  width: auto;
+  align-self: start;
+}
+.region__image { width: 100%; height: 100%; object-fit: contain; display: block; }
+
+.region__cotation { position: absolute; inset: 0; width: 100%; height: 100%; }
+.region__trait {
+  stroke: var(--carmin);
+  stroke-width: 2;
+  stroke-dasharray: 7 5;
+  transition: opacity var(--t-revele) ease;
+}
+.region__trait[data-etat='futur'] { opacity: 0; }
+
+.region__repere {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  gap: 0.42rem;
+  white-space: nowrap;
+  line-height: 1.2;
+  transition: opacity var(--t-revele) ease;
+}
+.region__repere::before {
+  content: '';
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  flex: none;
+  border: 2px solid var(--papier);
+}
+.region__repere--ville::before { background: var(--encre); }
+.region__repere--site::before {
+  background: var(--carmin);
+  box-shadow: 0 0 0 5px rgb(188 10 34 / 0.22);
+}
+.region__repere--site[data-etat='futur'] { opacity: 0; }
+.region__nom {
+  font-family: var(--cote);
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: var(--encre);
+  paint-order: stroke;
+  text-shadow: 0 0 4px var(--papier), 0 0 4px var(--papier), 0 0 4px var(--papier);
+}
+.region__nom--site { color: var(--carmin); }
+
+.region__distance {
+  position: absolute;
+  transform: translate(-50%, -50%) rotate(-48deg);
+  font-family: var(--cote);
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--carmin);
+  background: rgb(253 250 244 / 0.9);
+  padding: 0.05rem 0.3rem;
+  transition: opacity var(--t-revele) ease;
+}
+.region__distance[data-etat='futur'] { opacity: 0; }
+
+/* Echelle graphique, deduite de la distance mesuree entre les deux points. */
+.region__echelle {
+  position: absolute;
+  right: 0.6rem;
+  bottom: 0.6rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.15rem;
+  background: rgb(253 250 244 / 0.88);
+  padding: 0.28rem 0.4rem;
+  border: 1px solid var(--encre-14);
+}
+.region__regle {
+  display: block;
+  height: 5px;
+  border: 1px solid var(--encre);
+  border-top: 0;
+  min-width: 2rem;
+}
+.region__regle-texte {
+  font-family: var(--cote);
+  font-size: 0.62rem;
+  color: var(--encre);
+  line-height: 1;
+}
+.region__legende {
+  font-family: var(--cote);
+  font-size: 0.64rem;
+  line-height: 1.5;
+  color: var(--encre-62);
+}
+.region__legende b { color: var(--encre); }

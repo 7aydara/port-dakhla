@@ -352,9 +352,18 @@ reste un `TODO` visible plutôt qu'un chiffre approché :
 - le **pôle de réparation navale** n'a pas de profondeur documentée,
   contrairement au port de commerce (−16 m) et au port de pêche (−12 m) : rien
   n'est affiché plutôt qu'une extrapolation ;
-- les **coordonnées exactes du site** ne sont pas documentées : le marqueur
-  suit la règle du dossier (40 km au nord de Dakhla, côte ouverte, hors baie)
-  et l'indique à l'écran.
+- le **rattachement communal** reste à vérifier : la carte régionale montre
+  El Argoub au sud-est de Dakhla, alors que le port est au nord, à N'Tireft.
+  Les deux énoncés du dossier peuvent se concilier si la commune s'étend vers
+  le nord ; le point est signalé, pas tranché.
+
+### Le chiffre des 40 km, vérifié
+
+La distance Dakhla / N'Tireft mesure 366 px sur la carte régionale. Le dossier
+la donne pour 40 km, soit 110 m par pixel. **Vérification croisée** : à cette
+échelle, la presqu'île de Dakhla mesure une trentaine de kilomètres, ce qui
+correspond à sa longueur réelle. Le chiffre du dossier tient, et l'échelle
+graphique de la figure en découle.
 
 ### Deux écarts par rapport au brief, assumés
 

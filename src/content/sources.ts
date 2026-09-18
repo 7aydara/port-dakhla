@@ -71,6 +71,14 @@ export const SOURCES: readonly Source[] = [
     url: 'https://maroc24.com',
   },
   {
+    id: 'osm',
+    organe: 'OpenStreetMap',
+    date: 'fond de carte',
+    titre:
+      'Carte de la région de Dakhla — © les contributeurs d’OpenStreetMap, sous licence ODbL',
+    url: 'https://www.openstreetmap.org/copyright',
+  },
+  {
     id: 'tme',
     organe: 'TME Ingénierie',
     date: 'fiche projet',

@@ -7,7 +7,7 @@
 
 import { EnteteSection } from '../components/CadreSection';
 import { CarteLocalisation } from '../components/CarteLocalisation';
-import { SchemaCote } from '../components/SchemaCote';
+import { CarteRegion } from '../components/CarteRegion';
 import { Cote } from '../components/Cote';
 import { useEtape, etatCouche, usePresentation } from '../hooks/usePresentation';
 import { PROJET } from '../content/projet';
@@ -32,7 +32,7 @@ export function Section02Localiser() {
           <CarteLocalisation cadrage={recit ? 0 : Math.min(etape, 2)} marqueur={recit || etape >= 2} />
 
           <div className="localisation__colonne">
-            <SchemaCote marqueur={etape >= 2} />
+            <CarteRegion site={recit || etape >= 2} />
 
             <div className="cartouche" data-etat={couche(3)}>
               <p className="cartouche__titre">Pourquoi là, et pas à Dakhla</p>
