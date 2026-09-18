@@ -8,7 +8,7 @@ import { useEffect, useRef } from 'react';
 import { EnteteSection } from '../components/CadreSection';
 import { SchemaPort } from '../components/SchemaPort';
 import { Cote } from '../components/Cote';
-import { useEtape, etatCouche } from '../hooks/usePresentation';
+import { useEtape, etatCouche, usePresentation } from '../hooks/usePresentation';
 import { COUCHES } from '../content/couches';
 import { CHANTIER } from '../content/projet';
 import { nombre } from '../content/format';
@@ -17,6 +17,8 @@ const INDEX = 3;
 
 export function Section03Construction() {
   const etape = useEtape();
+  const { etat } = usePresentation();
+  const recit = etat.mode === 'recit';
   const colonne = useRef<HTMLDivElement>(null);
 
   /* La legende de la couche en cours se ramene toujours dans le champ. Sans
@@ -24,7 +26,8 @@ export function Section03Construction() {
      restent hors de vue au moment meme ou le presentateur en parle. */
   useEffect(() => {
     const liste = colonne.current;
-    if (!liste) return;
+    // En recit, rien ne defile tout seul : on lit de haut en bas.
+    if (!liste || recit) return;
     // Uniquement si la colonne defile pour elle-meme : sinon scrollIntoView
     // ferait defiler toute la section et sortirait le schema du champ.
     if (liste.scrollHeight <= liste.clientHeight + 2) return;
@@ -35,7 +38,7 @@ export function Section03Construction() {
       top: Math.max(0, haut - liste.clientHeight / 2 + active.offsetHeight / 2),
       behavior: 'smooth',
     });
-  }, [etape]);
+  }, [etape, recit]);
 
   return (
     <div className="contenu">
@@ -45,7 +48,7 @@ export function Section03Construction() {
         <div className="schema-scene">
           <SchemaPort />
 
-          <div className="legendes" ref={colonne}>
+          <div className="legendes" ref={colonne} data-mode={etat.mode}>
             {COUCHES.map((c, i) => {
               const etat = etatCouche(i, etape);
               return (

@@ -21,7 +21,6 @@ import { useScrubCanvas } from '../hooks/useScrubCanvas';
 import { useReducedMotion } from '../hooks/useReducedMotion';
 import { useEtape, usePresentation, etatCouche } from '../hooks/usePresentation';
 import { SECTIONS } from '../content/sections';
-import { PRESENTATEURS, ORDRE_PRESENTATEURS } from '../content/presentateurs';
 import { PROJET } from '../content/projet';
 import { MENTION_IMAGES } from '../content/sources';
 import { Cote } from '../components/Cote';
@@ -49,6 +48,10 @@ export function Section00Intro() {
     etape,
     nombreEtapes: s.etapes.length,
     mouvementReduit,
+    // En recit, la camera se pose sur un cadrage choisi -- littoral et dunes
+    // dans le meme plan -- plutot que de jouer une plongee que personne ne
+    // pilote. La plongee reste au mode presentation, ou elle a un sens.
+    fixe: recit ? 0.34 : undefined,
   });
 
   /* Le brief demande de precharger avant d'autoriser le scroll. On garde
@@ -100,13 +103,6 @@ export function Section00Intro() {
             ville de Dakhla, {PROJET.implantation}.
           </p>
 
-          <ul className="intro__noms" data-etat={couche(2)}>
-            {ORDRE_PRESENTATEURS.map((p) => (
-              <li key={p} style={{ ['--presentateur' as string]: PRESENTATEURS[p].jeton }}>
-                {PRESENTATEURS[p].nom}
-              </li>
-            ))}
-          </ul>
 
           <p className="intro__question" data-etat={couche(3)}>
             Ce projet constitue-t-il un aménagement durable du territoire

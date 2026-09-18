@@ -100,11 +100,11 @@ export function SchemaPort({ decalage = 0 }: ProprietesSchema) {
           <g className="schema__bandes" aria-hidden="true">
             {/* Bandes de profondeur : plus c'est profond, plus le bleu est
                 soutenu. Cinq paliers pastel, du large (à gauche) vers la côte. */}
-            <rect x="0" y="0" width="1000" height="760" fill="#7fb6d4" />
-            <path d={`${ISOBATHES[3].d} L 1000,760 L 1000,0 Z`} fill="#94c4dd" />
-            <path d={`${ISOBATHES[2].d} L 1000,760 L 1000,0 Z`} fill="#a9cfe4" />
-            <path d={`${ISOBATHES[1].d} L 1000,760 L 1000,0 Z`} fill="#c2deec" />
-            <path d={`${ISOBATHES[0].d} L 1000,760 L 1000,0 Z`} fill="#dcedf5" />
+            <rect x="0" y="0" width="1000" height="760" fill="#4e93b8" />
+            <path d={`${ISOBATHES[3].d} L 1000,760 L 1000,0 Z`} fill="#6aa8c9" />
+            <path d={`${ISOBATHES[2].d} L 1000,760 L 1000,0 Z`} fill="#8cc0d9" />
+            <path d={`${ISOBATHES[1].d} L 1000,760 L 1000,0 Z`} fill="#b1d5e7" />
+            <path d={`${ISOBATHES[0].d} L 1000,760 L 1000,0 Z`} fill="#d8ebf4" />
           </g>
 
           <path d={TERRE} className="schema__terre" />

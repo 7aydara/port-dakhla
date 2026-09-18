@@ -13,11 +13,13 @@
 }
 
 .schema__svg {
-  width: 100%;
-  height: auto;
-  /* Borne par la hauteur ET par la largeur : sur un videoprojecteur en
-     1024x768, c'est la hauteur qui manque, pas la largeur. */
-  max-height: min(58vh, 46vw);
+  /* La hauteur commande, la largeur suit. Avec width:100% + max-height, la
+     figure se centrait dans une boite trop large et laissait deux bandes
+     vides sur les cotes -- visible et laid sur un ecran large et court. */
+  height: min(64vh, 42vw);
+  width: auto;
+  max-width: 100%;
+  margin-inline: auto;
   border: 1px solid var(--encre-14);
   background: var(--creme);
   display: block;
@@ -45,7 +47,7 @@
 
 /* --- La terre ------------------------------------------------------------ */
 .schema__terre {
-  fill: color-mix(in oklab, var(--ocre) 16%, #f6efe2);
+  fill: color-mix(in oklab, var(--ocre) 22%, #f3e8d4);
   stroke: none;
   transition: fill-opacity var(--t-trace) var(--e-etape);
 }
@@ -65,7 +67,7 @@
 .schema__isobathe {
   fill: none;
   stroke: var(--sonde);
-  stroke-width: 1.4;
+  stroke-width: 2;
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
   opacity: 0.85;
@@ -76,33 +78,33 @@
 /* Les nombres de sonde : la marque de fabrique de la carte marine. */
 .schema__sonde {
   font-family: var(--cote);
-  font-size: 15px;
+  font-size: 22px;
   font-style: italic; /* convention : ce qui est en mer est en italique */
-  fill: rgb(20 50 63 / 0.58);
+  fill: rgb(14 42 54 / 0.62);
 }
 .schema__cote-isobathe {
   font-family: var(--cote);
-  font-size: 15px;
+  font-size: 26px;
   font-weight: 700;
   fill: var(--encre);
-  letter-spacing: 0.03em;
+  letter-spacing: 0.02em;
 }
 .schema__toponyme {
   font-family: var(--cote);
-  font-size: 15px;
+  font-size: 21px;
   font-weight: 700;
-  letter-spacing: 0.24em;
-  fill: rgb(20 50 63 / 0.55);
+  letter-spacing: 0.2em;
+  fill: rgb(14 42 54 / 0.6);
 }
 .schema__toponyme--mer { font-style: italic; fill: var(--sonde); }
 
 .schema__etiquette {
   font-family: var(--cote);
-  font-size: 15px;
+  font-size: 25px;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.06em;
   font-style: italic;
-  fill: var(--encre-62);
+  fill: var(--encre);
 }
 .schema__etiquette--terre { font-style: normal; }
 
@@ -110,7 +112,7 @@
 .schema__digue {
   fill: none;
   stroke: var(--ocre);
-  stroke-width: 10;
+  stroke-width: 15;
   stroke-linecap: round;
   stroke-linejoin: round;
   stroke-dasharray: 1;
@@ -122,7 +124,7 @@
 .schema__passe {
   fill: none;
   stroke: var(--corail);
-  stroke-width: 2;
+  stroke-width: 3.5;
   stroke-dasharray: 0.06 0.05;
   opacity: 0.9;
 }
@@ -131,7 +133,7 @@
 .schema__viaduc {
   fill: none;
   stroke: var(--encre);
-  stroke-width: 5;
+  stroke-width: 8;
   stroke-linecap: butt;
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
@@ -140,8 +142,8 @@
 [data-etat='acquis'] .schema__viaduc { stroke-dashoffset: 0; }
 
 .schema__pile {
-  stroke: var(--encre-40);
-  stroke-width: 3;
+  stroke: var(--encre-62);
+  stroke-width: 5;
   transition: opacity var(--t-revele) var(--e-etape);
   transition-delay: calc(var(--t-trace) * 0.55);
 }
@@ -151,7 +153,7 @@
 .schema__ilot {
   fill: url(#trame-remblai);
   stroke: var(--ocre);
-  stroke-width: 3;
+  stroke-width: 5;
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
   fill-opacity: 1;
@@ -163,7 +165,7 @@
 /* --- Les quais. Une couleur par usage, reprise dans la legende. ---------- */
 .schema__quai {
   fill: none;
-  stroke-width: 11;
+  stroke-width: 15;
   stroke-linecap: round;
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
@@ -190,7 +192,7 @@
 .schema__route {
   fill: none;
   stroke: var(--encre-62);
-  stroke-width: 3.5;
+  stroke-width: 5;
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
 }
@@ -201,7 +203,7 @@
 .schema__nord-aiguille { fill: var(--encre-40); }
 .schema__nord-lettre {
   font-family: var(--cote);
-  font-size: 17px;
+  font-size: 24px;
   font-weight: 700;
   fill: var(--encre-62);
 }
@@ -231,12 +233,17 @@
   flex-direction: column;
   gap: 0.5rem;
   /* La colonne defile pour elle-meme : le schema, lui, reste entier. */
-  max-height: min(58vh, 46vw);
-  overflow-y: auto;
+  /* Le plafond et le defilement propre ne servent qu'a l'oral, ou le schema
+     doit rester entier a l'ecran. En recit on lit la colonne d'un trait. */
   padding-right: 0.3rem;
   scrollbar-width: thin;
   scrollbar-color: var(--encre-14) transparent;
 }
+.legendes[data-mode='presentation'] {
+  max-height: min(64vh, 42vw);
+  overflow-y: auto;
+}
+
 .legende {
   display: grid;
   grid-template-columns: 1.1rem minmax(0, 1fr);

@@ -12,7 +12,6 @@
 
 import { useEffect, useRef, type ReactNode } from 'react';
 import { EtapeContext, usePresentation } from '../hooks/usePresentation';
-import { useEtapeAuScroll } from '../hooks/useScrollProgress';
 import { useRattrapage } from '../hooks/useRattrapage';
 import { SECTIONS } from '../content/sections';
 
@@ -30,12 +29,13 @@ export function CadreSection({ index, children, nu = false }: ProprietesCadre) {
   const recit = c.etat.mode === 'recit';
   const cadre = useRef<HTMLElement>(null);
 
-  // En mode recit, l'etape vient du scroll -- et React n'est reveille que
-  // lorsque l'entier change, pas a chaque image de defilement.
-  const etapeScroll = useEtapeAuScroll(cadre, total, recit);
-
+  /* En mode recit, TOUT est visible : la page est un document, pas une scene.
+     Reveler au scroll donnait des ecrans a moitie vides -- deux titres et du
+     blanc -- pendant la plus grande partie de la lecture. Le devoilement pas
+     a pas ne sert que l'oral, ou il a un sens : le presentateur parle sur ce
+     qui vient d'apparaitre. */
   const etape = recit
-    ? etapeScroll
+    ? total - 1
     : index === c.etat.section
       ? c.etat.etape
       : index < c.etat.section
@@ -57,20 +57,15 @@ export function CadreSection({ index, children, nu = false }: ProprietesCadre) {
     const obs = new IntersectionObserver(
       ([e]) => {
         centre.current = e.isIntersecting;
-        if (e.isIntersecting) c.aller(index, etape);
+        if (e.isIntersecting) c.aller(index, 0);
       },
       { rootMargin: '-45% 0px -45% 0px', threshold: 0 },
     );
     obs.observe(noeud);
     return () => obs.disconnect();
-    // `etape` volontairement absent : l'observateur n'a pas a se reconstruire
-    // a chaque etape. La mise a jour d'etape est faite par l'effet suivant.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [recit, index, c.aller]);
+  }, [recit, index, c]);
 
-  useEffect(() => {
-    if (recit && centre.current) c.aller(index, etape);
-  }, [recit, index, etape, c]);
+
 
   return (
     <EtapeContext.Provider value={etape}>

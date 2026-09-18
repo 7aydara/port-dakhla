@@ -512,6 +512,59 @@ for (const vp of [{ width: 1024, height: 768 }, { width: 1920, height: 1080 }, {
   await ctx.close();
 }
 
+/* ---- 15. AUCUN NOM DE PRESENTATEUR A L'ECRAN --------------------------- */
+/* Qui lit quoi ne regarde que les trois presentateurs. L'afficher devant la
+   classe revient a montrer ses fiches. Les noms n'ont le droit d'exister que
+   dans le panneau de notes, qui se masque d'une touche. */
+{
+  const ctx = await nav.newContext({ viewport: { width: 1600, height: 900 } });
+  const p = await ctx.newPage();
+  const NOMS = ['Zayd', 'Fahd', 'Rayan'];
+
+  const fautes = [];
+
+  // (a) En mode recit : nulle part, le panneau de notes n'existant pas.
+  await p.goto(BASE, { waitUntil: 'load' });
+  await p.waitForTimeout(1500);
+  const enRecit = await p.evaluate((noms) => {
+    const t = document.body.innerText;
+    return noms.filter((n) => new RegExp(`\\b${n}\\b`).test(t));
+  }, NOMS);
+  enRecit.forEach((n) => fautes.push(`mode recit : « ${n} »`));
+
+  // (b) En mode presentation : uniquement dans le panneau de notes.
+  await p.goto(BASE + '#/present', { waitUntil: 'load' });
+  await p.waitForTimeout(1200);
+  await p.keyboard.press('Space');
+  const etapes = [5, 5, 4, 6, 6, 12, 4, 5, 2];
+  for (let s = 0; s < 9; s++) {
+    await p.keyboard.press(String(s + 1));
+    await p.waitForTimeout(160);
+    for (let e = 0; e < etapes[s]; e++) {
+      const hors = await p.evaluate((noms) => {
+        // On lit la page SANS le panneau de notes.
+        const notes = document.querySelector('.notes');
+        const marque = notes ? notes.innerText : '';
+        let t = document.body.innerText;
+        if (marque) t = t.split(marque).join(' ');
+        return noms.filter((n) => new RegExp(`\\b${n}\\b`).test(t));
+      }, NOMS);
+      hors.forEach((n) => {
+        const cle = `presentation s0${s} : « ${n} »`;
+        if (!fautes.includes(cle)) fautes.push(cle);
+      });
+      await p.keyboard.press('ArrowRight');
+      await p.waitForTimeout(40);
+    }
+  }
+
+  ok(
+    fautes.length === 0,
+    `aucun nom de presentateur hors du panneau de notes${fautes.length ? ' -> ' + fautes.slice(0, 5).join(', ') : ''}`,
+  );
+  await ctx.close();
+}
+
 await nav.close();
 console.log(echecs.length === 0 ? '\nTOUT PASSE' : `\n${echecs.length} ECHEC(S)`);
 process.exit(echecs.length ? 1 : 0);

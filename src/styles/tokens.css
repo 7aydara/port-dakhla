@@ -12,28 +12,28 @@
 
 :root {
   /* --- Les fonds. Beige chaud en surface, bleu ciel pastel en profondeur. */
-  --sable: #f0e6d4; /* fond de page. Sable des dunes, éclairci.              */
-  --creme: #fbf6ec; /* surfaces surélevées : cartouches, panneaux.           */
-  --ciel:  #a9cfe4; /* bleu ciel pastel. Remplissages, bandes de profondeur. */
+  --sable: #efe2cc; /* fond de page. Sable des dunes, éclairci.              */
+  --creme: #fdfaf4; /* surfaces surélevées : cartouches, panneaux.           */
+  --ciel:  #93c2de; /* bleu ciel pastel. Remplissages, bandes de profondeur. */
 
   /* --- Les traits et les chiffres. */
-  --sonde: #2f6e8a; /* 4,57:1 sur sable — isobathes, filets, ET les chiffres.
+  --sonde: #215d77; /* 5,67:1 sur sable — isobathes, filets, ET les chiffres.
                        Un bleu de carte marine, assez foncé pour du texte.    */
 
   /* --- Le texte. */
-  --encre: #14323f; /* 10,90:1 sur sable, 12,51:1 sur crème. Tout le texte.   */
+  --encre: #0e2a36; /* 11,70:1 sur sable, 14,37:1 sur crème. Tout le texte. */
 
   /* --- Les deux accents. */
-  --ocre:   #8f4a1a; /* 5,37:1 — les ouvrages construits : digues, terre-plein,
+  --ocre:   #8a4416; /* 5,37:1 — les ouvrages construits : digues, terre-plein,
                         enrochements. La couleur de ce qui est gagné sur la mer. */
-  --corail: #ae4034; /* 4,74:1 — RÉSERVÉ à l'étape en cours et au focus clavier.
+  --corail: #a63527; /* 4,74:1 — RÉSERVÉ à l'étape en cours et au focus clavier.
                         Environ 2 % de la surface, jamais plus.               */
 
   /* --- Dérivés : des transparences d'encre, pas de nouvelles couleurs. */
-  --encre-62: rgb(20 50 63 / 0.72);
-  --encre-40: rgb(20 50 63 / 0.55);
-  --encre-14: rgb(20 50 63 / 0.18);
-  --encre-08: rgb(20 50 63 / 0.10);
+  --encre-62: rgb(14 42 54 / 0.76);
+  --encre-40: rgb(14 42 54 / 0.58);
+  --encre-14: rgb(14 42 54 / 0.22);
+  --encre-08: rgb(14 42 54 / 0.12);
   --ocre-20:   rgb(143 74 26 / 0.22);
   --corail-18: rgb(174 64 52 / 0.12);
 
@@ -43,7 +43,7 @@
   --fond: color-mix(in oklab, var(--sable) calc((1 - var(--profondeur)) * 100%), #dceef6);
 
   /* --- Typographie. Deux familles, toutes deux locales. */
-  --texte: 'Atkinson Hyperlegible', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --texte: 'Libre Franklin', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --cote: 'Iosevka', ui-monospace, 'SF Mono', 'Cascadia Mono', Consolas, monospace;
 
   /* --- Rythme. Calé sur 1024x768 comme sur 1920x1080. */

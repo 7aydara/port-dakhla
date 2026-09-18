@@ -8,7 +8,6 @@ import { EnteteSection } from '../components/CadreSection';
 import { useEtape, etatCouche } from '../hooks/usePresentation';
 import { SOURCES } from '../content/sources';
 import { LEXIQUE } from '../content/lexique';
-import { PRESENTATEURS, ORDRE_PRESENTATEURS } from '../content/presentateurs';
 import { REMERCIEMENTS } from '../content/conclusion';
 
 const INDEX = 8;
@@ -51,15 +50,7 @@ export function Section08Sources() {
 
         <footer className="fin" data-etat={etatCouche(1, etape)}>
           <p className="fin__merci">{REMERCIEMENTS}</p>
-          <ul className="fin__noms">
-            {ORDRE_PRESENTATEURS.map((p) => (
-              <li key={p} style={{ ['--presentateur' as string]: PRESENTATEURS[p].jeton }}>
-                <b>{PRESENTATEURS[p].nom}</b>
-                <span>{PRESENTATEURS[p].charge}</span>
-              </li>
-            ))}
-          </ul>
-        </footer>
+          </footer>
       </div>
     </div>
   );

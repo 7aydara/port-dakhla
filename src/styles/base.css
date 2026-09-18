@@ -15,8 +15,8 @@ body {
   background: var(--fond);
   color: var(--encre);
   font-family: var(--texte);
-  font-size: clamp(0.95rem, 0.55rem + 0.62vw, 1.22rem);
-  line-height: 1.55;
+  font-size: clamp(1.02rem, 0.62rem + 0.58vw, 1.42rem);
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   transition: background-color 900ms ease;
   overflow-wrap: break-word;
@@ -40,13 +40,13 @@ ul, ol { padding: 0; list-style: none; }
 }
 .cote--geant {
   display: block;
-  font-size: clamp(2.2rem, 1rem + 4.2vw, 4.6rem);
+  font-size: clamp(2.6rem, 1.1rem + 5vw, 6.4rem);
   font-weight: 700;
   line-height: 0.92;
 }
 .cote--grand {
   display: block;
-  font-size: clamp(1.5rem, 0.8rem + 2.2vw, 2.6rem);
+  font-size: clamp(1.8rem, 0.9rem + 2.6vw, 3.4rem);
   font-weight: 700;
   line-height: 1;
 }
@@ -88,9 +88,12 @@ ul, ol { padding: 0; list-style: none; }
 }
 .cartouche__titre {
   display: block;
-  margin-bottom: 0.35rem;
-  font-family: var(--cote);
-  font-size: 0.78rem;
+  margin-bottom: 0.4rem;
+  /* Les intitules reviennent a la police de texte : tout mettre en Iosevka
+     donnait au site un air de sortie de terminal. La monospace est desormais
+     reservee aux chiffres. */
+  font-family: var(--texte);
+  font-size: 0.86rem;
   font-weight: 700;
   letter-spacing: 0.09em;
   color: var(--encre);

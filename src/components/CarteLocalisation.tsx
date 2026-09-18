@@ -29,10 +29,13 @@ export function CarteLocalisation({ cadrage, marqueur }: ProprietesCarte) {
   if (absente) {
     return (
       <div className="carte carte--absente">
+        {/* Un fichier absent ne doit pas occuper la moitie de l'ecran : le
+            repère reste visible mais discret, et c'est le schema de principe
+            de la cote qui porte l'information. */}
         <EmplacementMedia
           fichier="media/carte-maroc.jpg"
-          attendu="Carte du Maroc entier, projection classique, nord en haut, façade atlantique bien dégagée. Largeur conseillée : 1600 px."
-          ratio="4 / 3"
+          attendu="Carte du Maroc entier, nord en haut, façade atlantique bien dégagée. Largeur conseillée : 1600 px."
+          ratio="21 / 6"
         />
         <p className="carte__note">
           En attendant ce fichier, le schéma de principe ci-dessous porte

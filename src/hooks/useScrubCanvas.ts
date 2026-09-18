@@ -37,6 +37,8 @@ interface Options {
   readonly etape: number;
   readonly nombreEtapes: number;
   readonly mouvementReduit: boolean;
+  /** En mode recit, la camera se pose la, sans sequence d'etapes. */
+  readonly fixe?: number;
 }
 
 /** Sortie douce : le mouvement part vite et se pose. */
@@ -46,14 +48,15 @@ const DUREE = 850;
 
 export function useScrubCanvas(
   canvas: RefObject<HTMLCanvasElement>,
-  { sequence, etape, nombreEtapes, mouvementReduit }: Options,
+  { sequence, etape, nombreEtapes, mouvementReduit, fixe }: Options,
 ): void {
   useEffect(() => {
     const toile = canvas.current;
     if (!toile || sequence.echec) return;
 
     const derniereImage = Math.max(1, sequence.nombre - 1);
-    const cible = nombreEtapes > 1 ? etape / (nombreEtapes - 1) : 0;
+    const cible =
+      fixe !== undefined ? fixe : nombreEtapes > 1 ? etape / (nombreEtapes - 1) : 0;
 
     // Position de depart : la ou la camera se trouvait deja. On la lit sur la
     // toile elle-meme, pour qu'un changement d'etape enchaine sans a-coup.
@@ -86,7 +89,7 @@ export function useScrubCanvas(
     image = requestAnimationFrame(boucle);
 
     return () => cancelAnimationFrame(image);
-  }, [canvas, sequence, etape, nombreEtapes, mouvementReduit]);
+  }, [canvas, sequence, etape, nombreEtapes, mouvementReduit, fixe]);
 
   // Redessine au redimensionnement : le cadrage « cover » est calcule a la main.
   useEffect(() => {

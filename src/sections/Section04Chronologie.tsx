@@ -18,7 +18,7 @@
 import { useState } from 'react';
 import { EnteteSection } from '../components/CadreSection';
 import { Cote } from '../components/Cote';
-import { useEtape } from '../hooks/usePresentation';
+import { useEtape, usePresentation } from '../hooks/usePresentation';
 import {
   FRISE_DEBUT,
   FRISE_FIN,
@@ -37,6 +37,8 @@ const ANNEES = [2016, 2018, 2020, 2022, 2024, 2026, 2028];
 
 export function Section04Chronologie() {
   const etape = useEtape();
+  const { etat } = usePresentation();
+  const recit = etat.mode === 'recit';
   const [survole, setSurvole] = useState<string | null>(null);
 
   const atteints = JAUGE_AVANCEMENT.filter((p) =>
@@ -45,11 +47,16 @@ export function Section04Chronologie() {
   const dernier = atteints.at(-1);
   const largeurJauge = dernier ? place(dernier.position) : 0;
 
-  // Le panneau montre le jalon survole, sinon ceux du palier courant.
+  /* En recit, les quinze dates sont affichees : la page est un document, on
+     doit pouvoir la lire. En presentation, seules celles du palier courant --
+     ou celle qu'on survole -- pour que le presentateur parle sur ce qui vient
+     d'apparaitre. */
   const jalonSurvole = JALONS.find((j) => j.id === survole && j.etape <= etape);
   const affiches: readonly Jalon[] = jalonSurvole
     ? [jalonSurvole]
-    : JALONS.filter((j) => j.etape === etape);
+    : recit
+      ? JALONS
+      : JALONS.filter((j) => j.etape === etape);
 
   return (
     <div className="contenu">
@@ -105,8 +112,8 @@ export function Section04Chronologie() {
                   key={j.id}
                   className="frise__jalon"
                   style={{ left: `${place(j.position)}%` }}
-                  data-etat={vu ? (j.etape === etape ? 'encours' : 'acquis') : 'futur'}
-                  data-cle={j.cle ? 'true' : undefined}
+                  data-etat={vu ? (!recit && j.etape === etape ? 'encours' : 'acquis') : 'futur'}
+                  data-cle={j.cle || recit ? 'true' : undefined}
                 >
                   <button
                     type="button"

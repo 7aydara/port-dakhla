@@ -10,7 +10,6 @@ import { EnteteSection } from '../components/CadreSection';
 import { useSuivreEtape } from '../hooks/useSuivreEtape';
 import { useEtape, etatCouche } from '../hooks/usePresentation';
 import { BLOCS, PROBLEMATIQUE } from '../content/conclusion';
-import { PRESENTATEURS } from '../content/presentateurs';
 
 const INDEX = 7;
 
@@ -39,13 +38,7 @@ export function Section07Conclusion() {
             <h3 className="balance__titre">Ce qui plaide pour</h3>
             {pour.map((b) => (
               <article key={b.id} className="argument" data-suivre data-etat={etatCouche(rang(b.id), etape)}>
-                <p
-                  className="argument__par"
-                  style={{ ['--presentateur' as string]: PRESENTATEURS[b.par].jeton }}
-                >
-                  {PRESENTATEURS[b.par].nom}
-                </p>
-                <h4 className="argument__titre">{b.titre}</h4>
+                  <h4 className="argument__titre">{b.titre}</h4>
                 <p className="argument__texte">{b.texte}</p>
               </article>
             ))}
@@ -55,13 +48,7 @@ export function Section07Conclusion() {
             <h3 className="balance__titre">Ce qui reste en suspens</h3>
             {limites.map((b) => (
               <article key={b.id} className="argument" data-suivre data-etat={etatCouche(rang(b.id), etape)}>
-                <p
-                  className="argument__par"
-                  style={{ ['--presentateur' as string]: PRESENTATEURS[b.par].jeton }}
-                >
-                  {PRESENTATEURS[b.par].nom}
-                </p>
-                <h4 className="argument__titre">{b.titre}</h4>
+                  <h4 className="argument__titre">{b.titre}</h4>
                 <p className="argument__texte">{b.texte}</p>
               </article>
             ))}

@@ -5,9 +5,10 @@
 # au runtime, aucun CDN, aucun Google Fonts.
 #
 # Deux familles, toutes deux sous licence OFL :
-#   - Atkinson Hyperlegible : texte courant. Dessinee par le Braille Institute
-#     pour la lisibilite a distance et en basse vision -- choix motive par la
-#     projection devant une classe, pas par le gout.
+#   - Libre Franklin : titres et texte courant. Une Franklin Gothic, la voix
+#     des atlas et des quotidiens. Variable : une seule fonte couvre toute la
+#     plage de graisses, du 400 du texte au 800 des titres, ce qui donne aux
+#     titres l'autorite qui manquait.
 #   - Iosevka : chiffres, cotes, legendes, schema. Monospace etroite a
 #     chiffres tabulaires par construction.
 #
@@ -48,10 +49,9 @@ sousensemble() { # paquet fichier  -- copie en sous-ensemblant
     --no-hinting --desubroutinize >/dev/null
 }
 
-echo "Atkinson Hyperlegible (texte courant, copie integrale -- deja legere)"
-copie @fontsource/atkinson-hyperlegible atkinson-hyperlegible-latin-400-normal.woff2
-copie @fontsource/atkinson-hyperlegible atkinson-hyperlegible-latin-400-italic.woff2
-copie @fontsource/atkinson-hyperlegible atkinson-hyperlegible-latin-700-normal.woff2
+echo "Libre Franklin (titres et texte, fonte variable -- une seule graisse a servir)"
+copie @fontsource-variable/libre-franklin libre-franklin-latin-wght-normal.woff2
+copie @fontsource-variable/libre-franklin libre-franklin-latin-wght-italic.woff2
 
 echo "Iosevka (chiffres et cotes, sous-ensemblee)"
 sousensemble @fontsource/iosevka iosevka-latin-400-normal.woff2
