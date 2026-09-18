@@ -29,25 +29,25 @@
 
 .schema__svg [data-anime] {
   transition:
-    stroke-dashoffset var(--t-etape) var(--e-etape),
-    fill-opacity var(--t-etape) var(--e-etape),
-    opacity var(--t-etape) var(--e-etape);
+    stroke-dashoffset var(--t-trace) var(--e-etape),
+    fill-opacity var(--t-trace) var(--e-etape),
+    opacity var(--t-trace) var(--e-etape);
 }
 .schema__svg text {
-  transition: opacity var(--t-etape) var(--e-etape);
-  transition-delay: calc(var(--t-etape) * 0.45); /* le nom arrive apres le trait */
+  transition: opacity var(--t-revele) var(--e-etape);
+  transition-delay: calc(var(--t-trace) * 0.5); /* le nom arrive apres le trait */
 }
 .schema__svg [data-etat='futur'] text { opacity: 0; transition-delay: 0s; }
 
 /* Les bandes de profondeur du fond apparaissent d'un bloc avec la couche 1. */
-.schema__bandes { transition: opacity var(--t-etape) var(--e-etape); }
+.schema__bandes { transition: opacity var(--t-revele) var(--e-etape); }
 [data-etat='futur'] .schema__bandes { opacity: 0; }
 
 /* --- La terre ------------------------------------------------------------ */
 .schema__terre {
   fill: color-mix(in oklab, var(--ocre) 16%, #f6efe2);
   stroke: none;
-  transition: fill-opacity var(--t-etape) var(--e-etape);
+  transition: fill-opacity var(--t-trace) var(--e-etape);
 }
 [data-etat='futur'] .schema__terre { fill-opacity: 0; }
 
@@ -142,8 +142,8 @@
 .schema__pile {
   stroke: var(--encre-40);
   stroke-width: 3;
-  transition: opacity var(--t-etape) var(--e-etape);
-  transition-delay: calc(var(--t-etape) * 0.55);
+  transition: opacity var(--t-revele) var(--e-etape);
+  transition-delay: calc(var(--t-trace) * 0.55);
 }
 [data-etat='futur'] .schema__pile { opacity: 0; transition-delay: 0s; }
 

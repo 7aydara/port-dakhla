@@ -435,6 +435,83 @@ for (const vp of [{ width: 1024, height: 768 }, { width: 1920, height: 1080 }, {
   await ctx.close();
 }
 
+/* ---- 14. GARDE-FOUS DE PERFORMANCE ------------------------------------- */
+/* Deux regressions ont reellement coute cher sur ce projet. Elles sont
+   desormais testees, parce qu'aucune des deux ne se voit dans une capture
+   d'ecran : elles ne se voient qu'en bougeant. */
+{
+  const ctx = await nav.newContext({ viewport: { width: 1600, height: 900 } });
+  const p = await ctx.newPage();
+  await p.goto(BASE, { waitUntil: 'load' });
+  await p.waitForFunction(
+    () => performance.getEntriesByType('resource').filter((r) => r.name.includes('/frames/')).length >= 60,
+    { timeout: 120000 },
+  );
+  await p.waitForTimeout(1200);
+
+  // (a) backdrop-filter REELLEMENT APPLIQUE. On interroge le style calcule de
+  //     chaque element plutot que la feuille de style : Tailwind publie une
+  //     classe utilitaire .backdrop-filter que personne n'emploie, et la
+  //     chercher dans le CSS livre donnait un faux positif.
+  //     Mesure A/B faite sur ce site : un flou d'arriere-plan sur la colonne
+  //     fixe faisait passer le 95e centile de 16,8 ms a 100 ms et perdre 31 %
+  //     des images pendant le defilement.
+  const flous = await p.evaluate(() =>
+    [...document.querySelectorAll('*')]
+      .filter((el) => {
+        const s2 = getComputedStyle(el);
+        const v = s2.backdropFilter || s2.webkitBackdropFilter;
+        return v && v !== 'none';
+      })
+      .map((el) => el.className.toString().slice(0, 40) || el.tagName)
+      .slice(0, 5),
+  );
+  ok(flous.length === 0, `aucun backdrop-filter applique${flous.length ? ' -> ' + flous.join(', ') : ''}`);
+
+  // (b) Fluidite reelle du defilement dans l'introduction, la ou se trouve la
+  //     toile. Seuil large : on cherche une regression de modele, pas a
+  //     mesurer la machine.
+  /* Trois passages, mediane retenue. Un seul passage sur cette machine varie
+     de 5 % a 21 % : mesurer une seule fois donnerait un test qui echoue au
+     hasard, ce qui est pire que pas de test du tout. */
+  const passages = [];
+  for (let essai = 0; essai < 3; essai++) {
+    const m = await p.evaluate(async () => {
+      const frames = [];
+      let precedent = performance.now();
+      let actif = true;
+      const boucle = (t) => { frames.push(t - precedent); precedent = t; if (actif) requestAnimationFrame(boucle); };
+      requestAnimationFrame(boucle);
+      window.scrollTo(0, 0);
+      await new Promise((r) => setTimeout(r, 500));
+      frames.length = 0;
+      let y = 0;
+      for (let i = 0; i < 110; i++) {
+        y += 22;
+        window.scrollTo(0, y);
+        await new Promise((r) => requestAnimationFrame(r));
+      }
+      actif = false;
+      const f = frames.slice(3).sort((a, b) => a - b);
+      return {
+        p95: Math.round(f[Math.floor(f.length * 0.95)]),
+        part: Math.round((f.filter((x) => x > 33).length / f.length) * 100),
+      };
+    });
+    passages.push(m);
+  }
+  passages.sort((a, b) => a.part - b.part);
+  const median = passages[1];
+  const detail = passages.map((m) => `${m.part} %`).join(' / ');
+
+  ok(
+    median.part <= 20 && median.p95 <= 120,
+    `defilement de l'intro : ${detail} -> mediane ${median.part} %, 95e centile ${median.p95} ms ` +
+      `(seuils : 20 % et 120 ms ; avant correction : 89 % et 150 ms)`,
+  );
+  await ctx.close();
+}
+
 await nav.close();
 console.log(echecs.length === 0 ? '\nTOUT PASSE' : `\n${echecs.length} ECHEC(S)`);
 process.exit(echecs.length ? 1 : 0);

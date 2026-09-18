@@ -26,7 +26,7 @@ npx serve dist       # sert dist/, fonctionne wifi coupé
 
 ```bash
 npx serve dist &     # sur le port 5055
-npm run verif        # 24 contrôles automatisés dans un navigateur réel
+npm run verif        # 26 contrôles automatisés dans un navigateur réel
 ```
 
 `npm run verif` contrôle les critères d'acceptation un par un : absence totale
@@ -35,6 +35,83 @@ rapides, rattrapage instantané des animations, `prefers-reduced-motion`,
 focus visible, absence de débordement en 1024×768 / 1920×1080 / 390×844,
 **la conformité de tous les chiffres affichés au dossier de référence**, et
 **le contraste WCAG de chaque nœud de texte** sur les huit sections de contenu.
+
+---
+
+## Performance
+
+L'introduction a été refaite après mesure. Voici ce qu'elle valait, et ce
+qu'elle vaut.
+
+| | Avant | Après |
+|---|---|---|
+| Attente avant de pouvoir défiler | **6,9 s** | 2,2 s |
+| Fluidité dans l'intro | **13 i/s**, 89 % d'images perdues | **60 i/s**, 1 % |
+| 95ᵉ centile du temps par image | 150 ms | **17 ms** |
+| Poids du site | 9,5 Mo | **6,7 Mo** |
+| Requêtes | 317 | 68 |
+
+### Ce qui n'allait pas, dans l'ordre où ça a été trouvé
+
+**1. React re-rendait tout l'arbre à chaque image de défilement.** Le hook de
+scroll poussait une progression continue dans un état React : 706 mutations du
+DOM pour 40 images. Or une section n'a pas besoin d'une progression continue,
+elle a besoin d'un **numéro d'étape**, un entier. `useEtapeAuScroll` ne réveille
+donc React que lorsque cet entier change.
+
+*Ce n'était pas le canvas :* un `drawImage` coûte 0,02 ms et le premier
+décodage d'une image 0,1 ms. Les deux ont été mesurés avant d'accuser qui que
+ce soit.
+
+**2. `backdrop-filter`.** Un flou d'arrière-plan sur la colonne fixe, au-dessus
+d'un contenu qui défile, oblige le navigateur à refaire le flou à chaque image.
+Test A/B sur la même page : 95ᵉ centile de 100 ms → 16,8 ms, images perdues de
+31 % → 2 %. Supprimé partout.
+
+**3. Le modèle du scrub lui-même.** Coller l'image au défilement oblige à
+repeindre et retransmettre une toile plein écran soixante fois par seconde.
+Plafonner la résolution et la cadence réduisait le coût sans jamais le
+supprimer. L'introduction avance désormais par **mouvements de caméra francs**,
+un par étape, interpolés en sortie douce sur 850 ms — dans les deux modes.
+Entre deux étapes, la toile ne consomme rien.
+
+C'est aussi un meilleur parti pris : un survol aérien scrubé sur trois hauteurs
+d'écran est le geste le plus commun du web actuel, et il ne sert pas le propos.
+Ce qui le sert, c'est la plongée — et elle se lit mieux en mouvements posés,
+pendant lesquels le présentateur parle sur une image stable.
+
+**4. Deux couches plein écran superposées.** Le voile de lisibilité était une
+`div` par-dessus la toile. Il est maintenant peint *dans* la toile : une couche
+au lieu de deux.
+
+**5. Les deux définitions étaient chargées.** Basse puis haute : 304 requêtes
+pour 72 images utiles. Une seule échelle est désormais choisie au montage selon
+l'écran et la connexion.
+
+**6. Le préchargement bloquait tout.** Le brief demandait de précharger avant
+d'autoriser le défilement ; attendre la séquence entière immobilisait la page
+près de sept secondes. On n'attend plus que la première passe — neuf images —
+et une échéance rend la main quoi qu'il arrive. Les passes suivantes se
+chargent en **temps mort** (`requestIdleCallback`), pour ne jamais concurrencer
+le défilement.
+
+### Le système de durées
+
+Un unique 1,4 s pour toutes les animations rendait l'ensemble poussif. Trois
+durées, trois usages :
+
+| Jeton | Durée | Usage |
+|---|---|---|
+| `--t-revele` | 0,42 s | un bloc, un chiffre, une carte qui apparaît |
+| `--t-trace` | 1,2 s | le dessin des ouvrages du schéma, suivi à l'oral |
+| `--t-camera` | 0,85 s | recadrage de carte, mouvement de l'introduction |
+
+### Deux garde-fous
+
+`npm run verif` contrôle désormais qu'aucun `backdrop-filter` n'est appliqué
+(vérifié sur le style **calculé**, pas dans la feuille de style) et que le
+défilement de l'introduction reste sous 20 % d'images perdues — médiane de
+trois passages, parce qu'un seul varie trop pour être un test.
 
 ---
 

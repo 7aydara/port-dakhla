@@ -111,16 +111,15 @@ ul, ol { padding: 0; list-style: none; }
    -------------------------------------------------------------------------- */
 [data-etat] {
   transition:
-    opacity var(--t-etape) var(--e-etape),
-    transform var(--t-etape) var(--e-etape),
-    stroke-dashoffset var(--t-etape) var(--e-etape),
-    color var(--t-etape) var(--e-etape),
-    border-color var(--t-etape) var(--e-etape),
-    background-color var(--t-etape) var(--e-etape);
+    opacity var(--t-revele) var(--e-etape),
+    transform var(--t-revele) var(--e-etape),
+    color var(--t-revele) var(--e-etape),
+    border-color var(--t-revele) var(--e-etape),
+    background-color var(--t-revele) var(--e-etape);
 }
 [data-etat='futur'] {
   opacity: 0;
-  transform: translateY(0.7rem);
+  transform: translateY(0.5rem);
   pointer-events: none;
 }
 [data-etat='encours'],

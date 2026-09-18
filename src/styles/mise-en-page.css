@@ -26,8 +26,9 @@
   gap: 0.9rem;
   padding: clamp(1rem, 2.4vh, 2rem) 0 clamp(1rem, 2.4vh, 2rem) var(--marge);
   border-right: 1px solid var(--encre-14);
-  background: rgb(251 246 236 / 0.82);
-  backdrop-filter: blur(6px);
+  /* Aplat franc, pas de backdrop-filter : mesure faite, le flou d'arriere-plan
+     sur cette colonne fixe faisait perdre 31 % des images pendant le scroll. */
+  background: var(--creme);
   z-index: 40;
 }
 .releve__entete {
@@ -213,10 +214,9 @@
   padding: 0.85rem clamp(1rem, 2.5vw, 2rem);
   /* Le panneau de notes reste le seul bloc sombre du site : posé sur une
      image ou sur un schéma clair, il faut qu'il se détache sans discussion. */
-  background: rgb(20 50 63 / 0.95);
+  background: #14323f;
   color: #fbf6ec;
   border-top: 2px solid var(--ocre);
-  backdrop-filter: blur(10px);
   font-size: clamp(0.88rem, 0.7rem + 0.4vw, 1.05rem);
 }
 .notes__qui {
@@ -261,7 +261,7 @@
   z-index: 120;
   display: grid;
   place-items: center;
-  background: rgb(251 246 236 / 0.97);
+  background: var(--creme);
   padding: var(--marge);
 }
 .aide-clavier__grille {
@@ -319,6 +319,6 @@ kbd {
 
 /* Ecrans courts (1024x768 : 768 px de haut, il faut serrer). */
 @media (max-height: 820px) {
-  :root { --t-etape: 1.25s; }
+  :root { --t-trace: 1.05s; }
   .section { padding-block: clamp(1.5rem, 4vh, 2.5rem); gap: clamp(0.8rem, 2vh, 1.4rem); }
 }

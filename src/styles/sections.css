@@ -32,8 +32,7 @@ body.chargement-en-cours { overflow: hidden; }
   gap: 0.5rem;
   padding: 0.6rem 0.95rem;
   border: 1px solid var(--encre-14);
-  background: rgb(251 246 236 / 0.92);
-  backdrop-filter: blur(8px);
+  background: var(--creme);
   font-family: var(--cote);
   font-size: 0.76rem;
   font-weight: 700;
@@ -47,7 +46,7 @@ body.chargement-en-cours { overflow: hidden; }
    ========================================================================== */
 
 .section--nu { padding: 0; min-height: 0; display: block; }
-.intro--piste { height: 320vh; position: relative; }
+.intro--piste { height: 230vh; position: relative; }
 .appli[data-mode='presentation'] .intro { height: 100vh; }
 
 .intro__collant {
@@ -60,22 +59,29 @@ body.chargement-en-cours { overflow: hidden; }
 }
 .appli[data-mode='presentation'] .intro__collant { position: relative; }
 
-.scrub { position: absolute; inset: 0; }
+/* La toile vit sur sa propre couche graphique, et son contenu ne peut pas
+   influencer la mise en page du reste. Mesure faite : sans cela, un canvas
+   dont les pixels changent a l'interieur d'un conteneur collant force le
+   navigateur a repeindre sur le fil principal a chaque defilement --
+   14 % d'images perdues contre 4 % ici.
+   `contain: layout paint` et non `strict` : `strict` ajoute la containment de
+   taille, dont cet element n'a pas besoin (ses dimensions viennent de inset)
+   et qui l'effondrerait si le positionnement changeait un jour. */
+.scrub {
+  position: absolute;
+  inset: 0;
+  contain: layout paint style;
+}
+.scrub__canvas { will-change: transform; }
 .scrub__canvas, .scrub__poster {
   width: 100%;
   height: 100%;
   display: block;
   object-fit: cover;
 }
-/* Voile de lisibilite : un degrade UTILE, pas decoratif -- sans lui, le titre
-   blanc passe sur une dune claire et devient illisible au videoprojecteur. */
-.scrub__voile {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(to top, rgb(20 50 63 / 0.9) 0%, rgb(20 50 63 / 0.5) 40%, rgb(20 50 63 / 0.08) 72%),
-    linear-gradient(to right, rgb(20 50 63 / 0.58) 0%, rgb(20 50 63 / 0) 55%);
-}
+/* Le voile de lisibilite n'est plus une div : il est peint DANS la toile
+   (voir useFrameSequence). Deux couches plein ecran superposees, dont l'une
+   change a chaque image, coutaient la moitie des images perdues au scroll. */
 
 .chargement {
   position: absolute;
@@ -267,7 +273,7 @@ body.chargement-en-cours { overflow: hidden; }
 .carte__mobile {
   position: absolute;
   inset: 0;
-  transition: transform 1.6s var(--e-etape);
+  transition: transform var(--t-camera) var(--e-etape);
 }
 .carte__image { width: 100%; height: 100%; object-fit: cover; display: block; }
 .carte__marqueur { position: absolute; inset: 0; width: 100%; height: 100%; }
@@ -655,7 +661,7 @@ body.chargement-en-cours { overflow: hidden; }
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  background: rgb(251 246 236 / 0.94);
+  background: var(--creme);
   border: 1px solid var(--encre-14);
   padding: 0.3rem 0.6rem;
   pointer-events: none;

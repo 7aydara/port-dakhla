@@ -12,7 +12,7 @@
 
 import { useEffect, useRef, type ReactNode } from 'react';
 import { EtapeContext, usePresentation } from '../hooks/usePresentation';
-import { progressionVersEtape, useScrollProgress } from '../hooks/useScrollProgress';
+import { useEtapeAuScroll } from '../hooks/useScrollProgress';
 import { useRattrapage } from '../hooks/useRattrapage';
 import { SECTIONS } from '../content/sections';
 
@@ -30,10 +30,12 @@ export function CadreSection({ index, children, nu = false }: ProprietesCadre) {
   const recit = c.etat.mode === 'recit';
   const cadre = useRef<HTMLElement>(null);
 
-  const progression = useScrollProgress(cadre, { actif: recit });
+  // En mode recit, l'etape vient du scroll -- et React n'est reveille que
+  // lorsque l'entier change, pas a chaque image de defilement.
+  const etapeScroll = useEtapeAuScroll(cadre, total, recit);
 
   const etape = recit
-    ? progressionVersEtape(progression, total)
+    ? etapeScroll
     : index === c.etat.section
       ? c.etat.etape
       : index < c.etat.section

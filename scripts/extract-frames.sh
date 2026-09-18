@@ -46,9 +46,14 @@ sequence() { # nom  fichier  fps  largeur  qualite  sousdossier
   printf "  %-10s %-3s images  %-5s px  %s\n" "$nom/$sous" "$n" "$largeur" "$(du -sh "$dir" | cut -f1)"
 }
 
+# 72 images, pas 152. Sur les ~2000 px de scroll de l'intro, cela fait une
+# image tous les 27 px : la difference avec 152 est imperceptible, mais le
+# poids est divise par deux et chaque image peut etre PLUS grande et de
+# meilleure qualite. Le navigateur ne charge qu'UNE des deux echelles,
+# choisie au runtime selon la taille de l'ecran -- jamais les deux.
 echo "Sequence d'intro (survol de la cote saharienne)"
-sequence hero hero.mp4 19 1280 65 hd
-sequence hero hero.mp4 19  640 58 sd
+sequence hero hero.mp4 9 1440 74 hd
+sequence hero hero.mp4 9  960 70 sd
 
 # Survol du chantier. Produite a la demande, mais PAS commitee (.gitignore) :
 # aucune des neuf sections ne l'utilise aujourd'hui et elle pese 8,4 Mo.

@@ -49,7 +49,13 @@
   /* --- Rythme. Calé sur 1024x768 comme sur 1920x1080. */
   --colonne-releve: clamp(9rem, 13vw, 14rem);
   --marge: clamp(1.25rem, 3.2vw, 3.5rem);
-  --t-etape: 1.4s;
+  /* Trois durees, trois usages. Un seul 1,4 s pour tout rendait l'ensemble
+     poussif : un bloc de texte qui met une seconde et demie a apparaitre
+     donne l'impression que le site rame, alors qu'il attend. */
+  --t-revele: 0.42s;  /* un bloc, un chiffre, une carte qui apparait          */
+  --t-trace: 1.2s;    /* le dessin des ouvrages du schema -- doit etre suivi
+                         a l'oral pendant que le presentateur parle           */
+  --t-camera: 0.85s;  /* un mouvement de cadrage : recadrage de carte, scrub  */
   --e-etape: cubic-bezier(0.22, 0.61, 0.36, 1);
 
   /* --- Couleurs des trois présentateurs. Toutes trois ≥ 5:1 sur le beige. */
