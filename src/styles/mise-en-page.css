@@ -143,6 +143,21 @@
   gap: clamp(1.2rem, 3vh, 2.4rem);
   scroll-margin-top: 0;
 }
+/* Changement de section : en mode presentation une seule section est montee a
+   la fois, donc passer a la suivante etait une coupe seche. Cette entree
+   breve -- 260 ms -- donne au changement de section le meme soin qu'au reste.
+   Volontairement courte : le presentateur enchaine, il ne contemple pas. */
+@keyframes entree-section {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+.appli[data-mode='presentation'] .section {
+  animation: entree-section 0.26s var(--e-etape) both;
+}
+/* L'introduction est exclue : sa toile est peinte en imperatif, une animation
+   sur son conteneur la ferait clignoter a chaque changement d'etape. */
+.appli[data-mode='presentation'] .section--nu { animation: none; }
+
 /* En mode presentation, la section occupe exactement la hauteur de l'ecran.
    L'entete ne defile JAMAIS : le presentateur doit garder son repere devant
    la classe. Seul le corps peut defiler, et seulement s'il deborde. */
